@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 export type Action = (...dependencies: any) => (req: NextApiRequest, res: NextApiResponse) => void | Promise<any>
 
-type HandlerConfig = {
+export type HandlerConfig = {
   get?: Action
   post?: Action
   put?: Action
