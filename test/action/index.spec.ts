@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Action, HandlerConfig, register } from '../../src/actions'
+import { Action, HandlerConfig, register } from '../../src/action'
 
 describe('when a action is registered', () => {
   let handler: Function

@@ -1,3 +1,3 @@
-export * from './actions'
+export * from './action'
 export * from './db'
 export * from './request'

@@ -26,7 +26,6 @@ export abstract class Repository<T, X> {
 
   public async all(page: number = 1, take: number = 30) {
     const skip = (page - 1) * take
-
     return await this.queryMany(async item => {
       return await (item as any).findMany({
         skip,
@@ -41,7 +40,7 @@ export abstract class Repository<T, X> {
     })
   }
 
-  async findById(id: string) {
+  async findById(id: string | Number) {
     return await this.querySingle(async item => {
       return await (item as any).findUnique({
         where: {
