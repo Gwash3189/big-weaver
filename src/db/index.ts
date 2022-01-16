@@ -1,2 +1,2 @@
-export { use } from './connect'
+export { use } from './client'
 export { Repository } from './repository'
