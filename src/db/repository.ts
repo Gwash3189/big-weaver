@@ -11,7 +11,7 @@ export abstract class Repository<T, X> {
   }
 
   protected async query(func: (prisma: T) => Promise<X | X[] | null>): Promise<X | X[] | null> {
-    return this.db<X>((client) => {
+    return this.db<X>(client => {
       const dataType = this.getDataType(client)
       return func(dataType)
     })

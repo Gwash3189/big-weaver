@@ -19,7 +19,7 @@ describe('Repository', () => {
     }
 
     getClient() {
-        return db
+      return db
     }
   }
 
