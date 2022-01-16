@@ -10,7 +10,6 @@ type DB = {
 describe('Repository', () => {
   let base: BaseRepository
   let db: DB
-  let connect: (fn: Function) => Promise<any>
   let findManyMock: jest.Mock
   let findFirstMock: jest.Mock
   let findUniqueMock: jest.Mock
@@ -18,9 +17,11 @@ describe('Repository', () => {
     getDataType(client: typeof db) {
       return client
     }
+
+    getClient() {
+        return db
+    }
   }
-  const createConnection = (db: DB) => (fn: Function) => Promise.resolve(fn(db))
-  const createBaseRespository = (connectFn: (fn: Function) => Promise<any>) => new BaseRepository(connectFn)
 
   beforeEach(() => {
     findManyMock = jest.fn()
@@ -32,8 +33,7 @@ describe('Repository', () => {
       findFirst: findFirstMock,
       findUnique: findUniqueMock,
     }
-    connect = createConnection(db)
-    base = createBaseRespository(connect)
+    base = new BaseRepository()
   })
 
   describe('all', () => {

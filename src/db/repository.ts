@@ -1,16 +1,17 @@
 import { PrismaClient } from '.prisma/client'
-import { connect } from './connect'
+import { Use, use } from './client'
 
 export abstract class Repository<T, X> {
-  protected db: typeof connect
+  protected db: Use
   abstract getDataType(client: PrismaClient): T
+  abstract getClient(): PrismaClient
 
-  constructor(dbClient: typeof connect = connect) {
-    this.db = dbClient
+  constructor() {
+    this.db = use(this.getClient())
   }
 
   protected async query(func: (prisma: T) => Promise<X | X[] | null>): Promise<X | X[] | null> {
-    return this.db<X>(client => {
+    return this.db<X>((client) => {
       const dataType = this.getDataType(client)
       return func(dataType)
     })
