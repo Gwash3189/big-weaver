@@ -45,11 +45,12 @@
     }
   ],
   "dependencies": {
-    "@prisma/client": "3.7.0",
-    "tsyringe": "^4.6.0"
+    "@prisma/client": "3.7.0"
   },
   "peerDependencies": {
-    "next": "12.0.x"
+    "next": "12.0.x",
+    "tsyringe": "^4.6.x"
+
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "7.0.5",
