@@ -45,20 +45,20 @@
     }
   ],
   "dependencies": {
-    "@prisma/client": "3.7.0"
+    "@prisma/client": "3.7.0",
+    "reflect-metadata": "^0.1.13"
   },
   "peerDependencies": {
     "next": "12.0.x",
     "tsyringe": "^4.6.x"
-
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "7.0.5",
+    "next": "12.0.x",
     "np": "7.6.0",
     "size-limit": "7.0.5",
     "tsdx": "0.14.1",
     "tslib": "2.3.1",
-    "typescript": "4.5.4",
-    "next": "12.0.x"
+    "typescript": "4.5.4"
   }
 }
