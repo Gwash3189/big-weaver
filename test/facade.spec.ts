@@ -17,8 +17,7 @@ describe('Facade', () => {
     return {
       resolve: () => {
         return new TestClass()
-      },
-      register: () => false
+      }
     }
   }
 
@@ -28,11 +27,11 @@ describe('Facade', () => {
 
   describe('#create', () => {
     it('proxies static methods to instance methods', () => {
-      expect((klass as TestClass).hello()).toEqual('hello, Facade')
+      expect(klass?.hello()).toEqual('hello, Facade')
     })
 
     it('allows us to access values', () => {
-      expect((klass as TestClass).name).toEqual('Facade')
+      expect(klass?.name).toEqual('Facade')
     })
   })
 })
