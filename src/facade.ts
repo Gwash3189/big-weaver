@@ -1,20 +1,20 @@
-import type { constructor } from "tsyringe/dist/typings/types"
-import { getContainer } from "./container"
+import { constructor } from 'tsyringe/dist/typings/types'
+import { getContainer } from './container'
 
 export class Facade {
   static create<T>(klass: constructor<T>, container: typeof getContainer = getContainer) {
-    return new Proxy(klass, {
+    return (new Proxy(klass, {
       get(_target, propKey, receiver) {
         const instance = container().resolve(klass)
         const targetValue = Reflect.get(instance as Object, propKey, receiver)
         if (typeof targetValue === 'function') {
-          return function (...args: any[]) {
+          return function(...args: any[]) {
             return targetValue.apply(instance, args)
           }
         } else {
           return targetValue
         }
-      }
-    }) as unknown as T
+      },
+    }) as unknown) as T
   }
 }

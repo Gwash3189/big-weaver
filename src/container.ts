@@ -1,4 +1,4 @@
-import { DependencyContainer } from "tsyringe";
+import { DependencyContainer } from 'tsyringe'
 
 let container: DependencyContainer | null = null
 

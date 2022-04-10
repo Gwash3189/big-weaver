@@ -38,8 +38,10 @@ describe('container', () => {
 
   describe('#clearContainer', () => {
     it('clears the container', () => {
-      const value = {}
-      setContainer(value as DependencyContainer)
+      const value = {
+        clearInstances: jest.fn(),
+      }
+      setContainer((value as unknown) as DependencyContainer)
       clearContainer()
       expect(() => getContainer()).toThrowError('No dependency container set')
     })
