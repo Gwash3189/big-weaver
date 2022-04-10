@@ -1,5 +1,4 @@
 import 'reflect-metadata'
-import { DependencyContainer } from 'tsyringe'
 import { Facade } from '../src/facade'
 
 class TestClass {
@@ -12,16 +11,9 @@ class TestClass {
 
 describe('Facade', () => {
   let klass: TestClass | null = null
-  let container = () => {
-    return {
-      resolve: () => {
-        return new TestClass()
-      },
-    }
-  }
 
   beforeEach(() => {
-    klass = Facade.create(TestClass, (container as unknown) as () => DependencyContainer)
+    klass = Facade.create(TestClass)
   })
 
   describe('#create', () => {

@@ -19,6 +19,7 @@
     "build": "tsdx build",
     "test": "tsdx test",
     "test:watch": "tsdx test --watch",
+    "test:coverage": "npx tsdx test --coverage",
     "lint": "tsdx lint",
     "lint:fix": "tsdx lint --fix",
     "prepare": "npm run build",
@@ -46,6 +47,8 @@
   ],
   "dependencies": {
     "@prisma/client": "3.7.0",
+    "@types/cookie": "^0.4.1",
+    "cookie": "^0.4.2",
     "reflect-metadata": "^0.1.13"
   },
   "peerDependencies": {
