@@ -49,16 +49,18 @@
     "@prisma/client": "3.7.0",
     "@types/cookie": "^0.4.1",
     "cookie": "^0.4.2",
+    "pino": "^7.10.0",
+    "tsyringe": "^4.6.x",
     "reflect-metadata": "^0.1.13"
   },
   "peerDependencies": {
-    "next": "12.0.x",
-    "tsyringe": "^4.6.x"
+    "next": "12.0.x"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "7.0.5",
     "next": "12.0.x",
     "np": "7.6.0",
+    "pino-pretty": "^7.6.1",
     "size-limit": "7.0.5",
     "tsdx": "0.14.1",
     "tslib": "2.3.1",
