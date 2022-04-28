@@ -1,5 +1,5 @@
-import { singleton } from "tsyringe";
-import { Facade } from "./facade";
+import { singleton } from 'tsyringe'
+import { Facade } from './facade'
 import pino, { Logger as Log, LoggerOptions } from 'pino'
 
 @singleton()
@@ -10,7 +10,7 @@ export class LoggingImplementation {
     let value = process.env.LOGGING_LEVEL || (process.env.NODE_ENV === 'production' && 'warn') || (process.env.NODE_ENV === 'test' && 'silent') || 'trace'
     this.logger = pino({
       redact: ['email', 'password', 'hashedPassword', 'name', 'lastName', 'firstName'],
-      level: value
+      level: value,
     })
   }
 
@@ -37,7 +37,6 @@ export class LoggingImplementation {
   trace(params: object) {
     this.logger.trace(params)
   }
-
 }
 
 export const Logger = Facade.create(LoggingImplementation)

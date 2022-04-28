@@ -30,7 +30,7 @@ function startCycleTimer() {
 function stopCycleTimer() {
   endTime = Date.now()
   difference = endTime - startTime
-  Logger.debug({ message: 'Processing complete', startTime, endTime, difference: `${difference}ms`})
+  Logger.debug({ message: 'Processing complete', startTime, endTime, difference: `${difference}ms` })
 }
 
 function getControllerInstance(controller: Function) {

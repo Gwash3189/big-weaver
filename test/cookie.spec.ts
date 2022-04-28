@@ -1,17 +1,16 @@
 import 'reflect-metadata'
-import { container } from "tsyringe"
+import { container } from 'tsyringe'
 import { Cookie } from '../src'
 
 describe('Cookie', () => {
-  let mockResponse: object,
-      mockSetHeaders: jest.Mock
+  let mockResponse: object, mockSetHeaders: jest.Mock
 
   describe('#set', () => {
     beforeEach(() => {
       mockSetHeaders = jest.fn()
       mockResponse = {
         getHeader: jest.fn(() => []),
-        setHeader: mockSetHeaders
+        setHeader: mockSetHeaders,
       }
       container.register('response', { useValue: mockResponse })
       Cookie.set('name', 123)
@@ -26,7 +25,7 @@ describe('Cookie', () => {
         mockSetHeaders = jest.fn()
         mockResponse = {
           getHeader: jest.fn(),
-          setHeader: mockSetHeaders
+          setHeader: mockSetHeaders,
         }
         container.register('response', { useValue: mockResponse })
         Cookie.set('name', 123)
@@ -43,7 +42,7 @@ describe('Cookie', () => {
       mockSetHeaders = jest.fn()
       mockResponse = {
         getHeader: jest.fn(() => []),
-        setHeader: mockSetHeaders
+        setHeader: mockSetHeaders,
       }
       container.register('response', { useValue: mockResponse })
       Cookie.remove('name')
@@ -64,8 +63,8 @@ describe('Cookie', () => {
       mockSetHeaders = jest.fn()
       mockRequest = {
         cookies: {
-          name: 123
-        }
+          name: 123,
+        },
       }
       container.register('request', { useValue: mockRequest })
     })
