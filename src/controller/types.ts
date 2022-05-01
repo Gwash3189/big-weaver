@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { AfterMiddleware, BeforeMiddleware } from './middleware'
 
 export type ActionReturn = void | Promise<any>
 export type Action = (req: NextApiRequest, res: NextApiResponse) => ActionReturn
