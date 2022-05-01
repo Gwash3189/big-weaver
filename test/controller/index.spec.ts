@@ -42,7 +42,7 @@ describe('Controller', () => {
     })
 
     it('pushes the provided function into the before middleware stack', () => {
-      expect(instance.beforeMiddleware[0].handle).toEqual(beforeFunction)
+      expect((instance as any).beforeMiddleware[0].handle).toEqual(beforeFunction)
     })
 
     it('returns a MiddlewareProvider', () => {
@@ -51,13 +51,13 @@ describe('Controller', () => {
 
     describe('#only', () => {
       it('tracks which method to apply the middleware to', () => {
-        expect((instance.beforeMiddleware[0] as any)._only).toEqual(['get'])
+        expect(((instance as any).beforeMiddleware[0] as any)._only).toEqual(['get'])
       })
     })
 
     describe('#except', () => {
       it('tracks which method to not apply the middleware to', () => {
-        expect((instance.beforeMiddleware[0] as any)._except).toEqual(['post'])
+        expect(((instance as any).beforeMiddleware[0] as any)._except).toEqual(['post'])
       })
     })
   })

@@ -11,8 +11,6 @@ export interface IController {
   patch?: Action
   head?: Action
   options?: Action
-  readonly beforeMiddleware: Array<BeforeMiddleware>
-  readonly afterMiddleware: Array<AfterMiddleware>
 }
 export type Before = (req: NextApiRequest) => ActionReturn
 export type After = (req: NextApiRequest, res: NextApiResponse) => ActionReturn

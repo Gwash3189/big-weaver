@@ -3,8 +3,8 @@ import { AfterMiddleware, BeforeMiddleware, MiddlewareProvider } from './middlew
 import { After, Before, IController } from './types'
 
 export class Controller implements IController {
-  public readonly beforeMiddleware: Array<BeforeMiddleware> = []
-  public readonly afterMiddleware: Array<AfterMiddleware> = []
+  private readonly beforeMiddleware: Array<BeforeMiddleware> = []
+  private readonly afterMiddleware: Array<AfterMiddleware> = []
 
   protected before(runner: Before) {
     const middleware = new BeforeMiddleware(runner)

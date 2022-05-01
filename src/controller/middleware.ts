@@ -72,14 +72,14 @@ export class MiddlewareExecutor {
   constructor(protected middleware: Middleware, private method: string) {}
 
   static before(method: string, controller: Controller, req: NextApiRequest) {
-    controller.beforeMiddleware
+    ((controller as unknown as { beforeMiddleware: BeforeMiddleware[]}).beforeMiddleware)
       .map(middleware => MiddlewareExecutor.create(middleware, method))
       .filter(middleware => middleware.shouldBeIncluded())
       .forEach(executor => executor.execute(req))
   }
 
   static after(method: string, controller: Controller, req: NextApiRequest, res: NextApiResponse) {
-    controller.afterMiddleware
+    ((controller as unknown as { afterMiddleware: AfterMiddleware[]}).afterMiddleware)
       .map(middleware => MiddlewareExecutor.create(middleware, method))
       .filter(middleware => middleware.shouldBeIncluded())
       .forEach(executor => executor.execute(req, res))
