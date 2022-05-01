@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { container, singleton } from 'tsyringe'
+import { container } from 'tsyringe'
 import { Facade } from './facade'
 import { serialize, CookieSerializeOptions } from 'cookie'
-import { RequestKey, ResponseKey } from './container'
+import { facade, RequestKey, ResponseKey } from './container'
 
-@singleton()
+@facade()
 class CookieImplementation {
   set(name: string, value: any, options: CookieSerializeOptions = {}) {
     const response = container.resolve<NextApiResponse>(ResponseKey)

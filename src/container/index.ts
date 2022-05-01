@@ -13,5 +13,11 @@ export function repository<T>() {
   }
 }
 
+export function facade<T>() {
+  return function(target: constructor<T>) {
+    singleton()(target)
+  }
+}
+
 export const ResponseKey = 'response'
 export const RequestKey = 'request'

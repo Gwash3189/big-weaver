@@ -1,8 +1,8 @@
-import { singleton } from 'tsyringe'
 import { Facade } from './facade'
 import pino, { Logger as Log, LoggerOptions } from 'pino'
+import { facade } from './container'
 
-@singleton()
+@facade()
 export class LoggingImplementation {
   private logger: Log
 
