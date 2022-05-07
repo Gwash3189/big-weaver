@@ -1,6 +1,5 @@
 import 'reflect-metadata'
 
-export * from './action'
 export { BaseRespository } from './db'
 export * from './request'
 export * from './facade'
