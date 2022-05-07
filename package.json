@@ -17,6 +17,7 @@
     "update": "npm run bootstrap",
     "start": "tsdx watch",
     "build": "tsdx build && cp -a ./dist/. ./",
+    "build:local": "tsdx build && cp -a ./dist/. ./ && npm run clean",
     "test": "tsdx test",
     "test:watch": "tsdx test --watch",
     "test:coverage": "npx tsdx test --coverage",
@@ -25,14 +26,15 @@
     "prepare": "npm run build",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "clean": "npm run clean:files; npm run clean:container; npm run clean:action; npm run clean:auth; npm run clean:controller; npm run clean:db; npm run clean:request",
+    "clean": "npm run clean:files; npm run clean:container; npm run clean:action; npm run clean:auth; npm run clean:controller; npm run clean:db; npm run clean:request; npm run clean:facade",
     "clean:files": "rm -rf index.js nextjs-backend-helpers.* *.d.ts",
     "clean:container": "rm -rf container",
+    "clean:facade": "rm -rf facade",
     "clean:action": "rm -rf action",
     "clean:auth": "rm -rf auth",
     "clean:db": "rm -rf db",
     "clean:request": "rm -rf request",
-    "clean:controller": "rm -rf controller"
+    "clean:controller": "rm -rf controllers"
   },
   "prettier": {
     "printWidth": 160,
