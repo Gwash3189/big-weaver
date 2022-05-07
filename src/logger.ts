@@ -1,12 +1,12 @@
 import { Facade } from './facade'
 import pino, { Logger as Log, LoggerOptions } from 'pino'
-import { facade } from './container'
 
-@facade()
-export class LoggingImplementation {
+export class LoggingImplementation extends Facade {
   private logger: Log
 
   constructor() {
+    super()
+
     let value = process.env.LOGGING_LEVEL || (process.env.NODE_ENV === 'production' && 'warn') || (process.env.NODE_ENV === 'test' && 'silent') || 'trace'
     this.logger = pino({
       redact: ['email', 'password', 'hashedPassword', 'name', 'lastName', 'firstName'],

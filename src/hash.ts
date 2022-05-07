@@ -1,9 +1,7 @@
 import { Facade } from './facade'
 import bcrypt from 'bcrypt'
-import { facade } from './container'
 
-@facade()
-class HashImplementation {
+class HashImplementation extends Facade {
   private saltRounds = 10
 
   async make(password: string, options: { rounds: number } = { rounds: this.saltRounds }) {

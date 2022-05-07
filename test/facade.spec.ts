@@ -1,8 +1,6 @@
 import 'reflect-metadata'
 import { Facade } from '../src/facade'
 
-
-
 describe('Facade', () => {
   class TestClass {
     constructor(public name: string = 'Facade') {}
@@ -44,8 +42,7 @@ describe('Facade', () => {
     const TestFacade = Facade.create(TestFacadeImplementation)
 
     beforeEach(() => {
-      TestFacade
-        .replace(Replacement)
+      TestFacade.replace(Replacement)
 
       TestFacade.hello(123123)
     })
@@ -87,7 +84,7 @@ describe('Facade', () => {
     const TestFacade = Facade.create(TestFacadeImplementation)
 
     beforeEach(() => {
-      TestFacade.mock('hello', (num) => num, jest)
+      TestFacade.mock('hello', num => num, jest)
       TestFacade.hello(123123)
     })
 

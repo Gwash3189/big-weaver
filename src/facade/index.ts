@@ -13,7 +13,7 @@ export class Facade {
   }
 
   replace(repalcement: constructor<Facade>) {
-    container.registerSingleton(`original-${this.constructor.name}`, repalcement as unknown as constructor<Facade>)
+    container.registerSingleton(`original-${this.constructor.name}`, (repalcement as unknown) as constructor<Facade>)
   }
 
   spyOn(methodName: string, j: typeof jest) {
@@ -29,6 +29,6 @@ export class Facade {
       }
     }
 
-    this.replace(c as unknown as typeof Facade)
+    this.replace((c as unknown) as typeof Facade)
   }
 }

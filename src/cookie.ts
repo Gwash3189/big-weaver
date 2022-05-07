@@ -2,10 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { container } from 'tsyringe'
 import { Facade } from './facade'
 import { serialize, CookieSerializeOptions } from 'cookie'
-import { facade, RequestKey, ResponseKey } from './container'
+import { RequestKey, ResponseKey } from './container'
 
-@facade()
-class CookieImplementation {
+class CookieImplementation extends Facade {
   set(name: string, value: any, options: CookieSerializeOptions = {}) {
     const response = container.resolve<NextApiResponse>(ResponseKey)
     response.setHeader('Set-Cookie', [...((response.getHeader('Set-Cookie') as Array<string> | undefined) || []), serialize(name, value, options)])
