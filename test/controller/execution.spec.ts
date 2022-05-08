@@ -1,6 +1,6 @@
-import { NextApiRequest, NextApiResponse } from 'next'
 import 'reflect-metadata'
-import { container } from 'tsyringe'
+
+import { NextApiRequest, NextApiResponse } from 'next'
 import { Controller, install } from '../../src'
 
 let controllerSpy: jest.Mock
@@ -37,10 +37,6 @@ class TestController extends Controller {
 
 describe('#install', () => {
   let handler
-
-  beforeAll(() => {
-    container.register(TestController, { useClass: TestController })
-  })
 
   it('returns a function', () => {
     expect(install(TestController)).toBeInstanceOf(Function)
