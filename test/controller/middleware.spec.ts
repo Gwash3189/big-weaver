@@ -184,6 +184,35 @@ describe('MiddlewareExecutor', () => {
           expect(middleware).not.toHaveBeenCalledWith(req, expect.any(Function))
         })
       })
+
+      describe('when the stop function is called', () => {
+        let res: NextApiResponse
+        class TestController extends Controller {
+          constructor() {
+            super()
+
+            this.before((_req, stop) => {
+              stop()
+            })
+
+            this.before(middleware)
+          }
+        }
+
+        beforeEach(() => {
+          middleware = jest.fn()
+          req = (jest.fn() as unknown) as NextApiRequest
+          res = ({
+            redirect: jest.fn(),
+          } as unknown) as NextApiResponse
+          mockController = new TestController()
+          mockController.get(req, res)
+        })
+
+        it("doesn't call middleware after stop is called", () => {
+          expect(middleware).not.toHaveBeenCalled()
+        })
+      })
     })
   })
 
@@ -221,14 +250,14 @@ describe('MiddlewareExecutor', () => {
       beforeEach(() => {
         middleware = jest.fn()
         req = (jest.fn() as unknown) as NextApiRequest
-        res = {
-          redirect: jest.fn()
-        } as unknown as NextApiResponse
+        res = ({
+          redirect: jest.fn(),
+        } as unknown) as NextApiResponse
         mockController = new TestController()
         mockController.get(req, res)
       })
 
-      it('doesn\'t call middleware after stop is called', () => {
+      it("doesn't call middleware after stop is called", () => {
         expect(middleware).not.toHaveBeenCalled()
       })
     })

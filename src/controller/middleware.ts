@@ -82,13 +82,13 @@ export class MiddlewareExecutor {
       .map(middleware => MiddlewareExecutor.create(middleware, method))
       .filter(middleware => middleware.shouldBeIncluded())
 
-      for (let index = 0; index < middleware.length; index++) {
-        const executor = middleware[index];
-        executor.execute(req, null, stop)
-        if (shouldStop) {
-          break
-        }
+    for (let index = 0; index < middleware.length; index++) {
+      const executor = middleware[index]
+      executor.execute(req, null, stop)
+      if (shouldStop) {
+        break
       }
+    }
   }
 
   static after(method: string, controller: Controller, req: NextApiRequest, res: NextApiResponse) {
@@ -103,7 +103,7 @@ export class MiddlewareExecutor {
       .filter(middleware => middleware.shouldBeIncluded())
 
     for (let index = 0; index < middleware.length; index++) {
-      const executor = middleware[index];
+      const executor = middleware[index]
       executor.execute(req, res, stop)
       if (shouldStop) {
         break

@@ -69,7 +69,7 @@ describe('Controller', () => {
         instance.get(req, res)
       })
 
-      it('doesn\'t call middleware after stop is called', () => {
+      it("doesn't call middleware after stop is called", () => {
         expect(middlewareMock).not.toHaveBeenCalled()
       })
     })
@@ -83,6 +83,71 @@ describe('Controller', () => {
     describe('#except', () => {
       it('tracks which method to not apply the middleware to', () => {
         expect(((instance as any).beforeMiddleware[0] as any)._except).toEqual(['post'])
+      })
+    })
+  })
+
+  describe('#after', () => {
+    const afterFunction = jest.fn()
+    let returnValue: MiddlewareProvider | null = null
+    let instance: AfterController
+
+    class AfterController extends Controller {
+      constructor() {
+        super()
+
+        returnValue = this.after(afterFunction)
+          .only('get')
+          .except('post')
+      }
+    }
+
+    beforeEach(() => {
+      instance = new AfterController()
+    })
+
+    it('pushes the provided function into the before middleware stack', () => {
+      expect((instance as any).afterMiddleware[0].handle).toEqual(afterFunction)
+    })
+
+    it('returns a MiddlewareProvider', () => {
+      expect(returnValue).toBeInstanceOf(MiddlewareProvider)
+    })
+
+    describe('when the stop function is called', () => {
+      let middlewareMock: jest.Mock
+      class AfterController extends Controller {
+        constructor() {
+          super()
+
+          this.after((_req, _res, stop) => {
+            stop()
+          })
+
+          this.after(middlewareMock)
+        }
+      }
+
+      beforeEach(() => {
+        middlewareMock = jest.fn()
+        instance = new AfterController()
+        instance.get(req, res)
+      })
+
+      it("doesn't call middleware after stop is called", () => {
+        expect(middlewareMock).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('#only', () => {
+      it('tracks which method to apply the middleware to', () => {
+        expect(((instance as any).afterMiddleware[0] as any)._only).toEqual(['get'])
+      })
+    })
+
+    describe('#except', () => {
+      it('tracks which method to not apply the middleware to', () => {
+        expect(((instance as any).afterMiddleware[0] as any)._except).toEqual(['post'])
       })
     })
   })
