@@ -143,7 +143,7 @@ describe('MiddlewareExecutor', () => {
       })
 
       it('executes the middleware', () => {
-        expect(middleware).toHaveBeenCalledWith(req)
+        expect(middleware).toHaveBeenCalledWith(req, expect.any(Function))
       })
     })
 
@@ -168,7 +168,7 @@ describe('MiddlewareExecutor', () => {
         })
 
         it('executes the middles', () => {
-          expect(middleware).toHaveBeenCalledWith(req)
+          expect(middleware).toHaveBeenCalledWith(req, expect.any(Function))
         })
       })
 
@@ -181,7 +181,7 @@ describe('MiddlewareExecutor', () => {
         })
 
         it('does not execute the middles', () => {
-          expect(middleware).not.toHaveBeenCalledWith(req)
+          expect(middleware).not.toHaveBeenCalledWith(req, expect.any(Function))
         })
       })
     })
@@ -205,13 +205,41 @@ describe('MiddlewareExecutor', () => {
       mockController = new TestController()
     })
 
+    describe('when the stop function is called', () => {
+      class TestController extends Controller {
+        constructor() {
+          super()
+
+          this.after((_req, _res, stop) => {
+            stop()
+          })
+
+          this.after(middleware)
+        }
+      }
+
+      beforeEach(() => {
+        middleware = jest.fn()
+        req = (jest.fn() as unknown) as NextApiRequest
+        res = {
+          redirect: jest.fn()
+        } as unknown as NextApiResponse
+        mockController = new TestController()
+        mockController.get(req, res)
+      })
+
+      it('doesn\'t call middleware after stop is called', () => {
+        expect(middleware).not.toHaveBeenCalled()
+      })
+    })
+
     describe('when no methods have been excluded or included', () => {
       beforeEach(() => {
         MiddlewareExecutor.after('get', mockController, req, res)
       })
 
       it('executes the middleware', () => {
-        expect(middleware).toHaveBeenCalledWith(req, res)
+        expect(middleware).toHaveBeenCalledWith(req, res, expect.any(Function))
       })
     })
 
@@ -237,7 +265,7 @@ describe('MiddlewareExecutor', () => {
         })
 
         it('executes the middles', () => {
-          expect(middleware).toHaveBeenCalledWith(req, res)
+          expect(middleware).toHaveBeenCalledWith(req, res, expect.any(Function))
         })
       })
 
@@ -251,7 +279,7 @@ describe('MiddlewareExecutor', () => {
         })
 
         it('does not execute the middles', () => {
-          expect(middleware).not.toHaveBeenCalledWith(req, res)
+          expect(middleware).not.toHaveBeenCalledWith(req, res, expect.any(Function))
         })
       })
     })

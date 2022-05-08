@@ -49,6 +49,31 @@ describe('Controller', () => {
       expect(returnValue).toBeInstanceOf(MiddlewareProvider)
     })
 
+    describe('when the stop function is called', () => {
+      let middlewareMock: jest.Mock
+      class BeforeController extends Controller {
+        constructor() {
+          super()
+
+          this.before((_req, stop) => {
+            stop()
+          })
+
+          this.before(middlewareMock)
+        }
+      }
+
+      beforeEach(() => {
+        middlewareMock = jest.fn()
+        instance = new BeforeController()
+        instance.get(req, res)
+      })
+
+      it('doesn\'t call middleware after stop is called', () => {
+        expect(middlewareMock).not.toHaveBeenCalled()
+      })
+    })
+
     describe('#only', () => {
       it('tracks which method to apply the middleware to', () => {
         expect(((instance as any).beforeMiddleware[0] as any)._only).toEqual(['get'])

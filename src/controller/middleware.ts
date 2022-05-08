@@ -72,17 +72,43 @@ export class MiddlewareExecutor {
   constructor(protected middleware: Middleware, private method: string) {}
 
   static before(method: string, controller: Controller, req: NextApiRequest) {
-    ;((controller as unknown) as { beforeMiddleware: BeforeMiddleware[] }).beforeMiddleware
+    let shouldStop = false
+
+    const stop = () => {
+      shouldStop = true
+    }
+
+    const middleware = ((controller as unknown) as { beforeMiddleware: BeforeMiddleware[] }).beforeMiddleware
       .map(middleware => MiddlewareExecutor.create(middleware, method))
       .filter(middleware => middleware.shouldBeIncluded())
-      .forEach(executor => executor.execute(req))
+
+      for (let index = 0; index < middleware.length; index++) {
+        const executor = middleware[index];
+        executor.execute(req, null, stop)
+        if (shouldStop) {
+          break
+        }
+      }
   }
 
   static after(method: string, controller: Controller, req: NextApiRequest, res: NextApiResponse) {
-    ;((controller as unknown) as { afterMiddleware: AfterMiddleware[] }).afterMiddleware
+    let shouldStop = false
+
+    const stop = () => {
+      shouldStop = true
+    }
+
+    const middleware = ((controller as unknown) as { afterMiddleware: AfterMiddleware[] }).afterMiddleware
       .map(middleware => MiddlewareExecutor.create(middleware, method))
       .filter(middleware => middleware.shouldBeIncluded())
-      .forEach(executor => executor.execute(req, res))
+
+    for (let index = 0; index < middleware.length; index++) {
+      const executor = middleware[index];
+      executor.execute(req, res, stop)
+      if (shouldStop) {
+        break
+      }
+    }
   }
 
   static create(middleware: Middleware, method: string) {
@@ -93,12 +119,12 @@ export class MiddlewareExecutor {
     return this.middleware.shouldExecute(this.method)
   }
 
-  execute(req: NextApiRequest, res: NextApiResponse | null = null) {
+  execute(req: NextApiRequest, res: NextApiResponse | null, stop: () => void) {
     if (this.middleware instanceof BeforeMiddleware) {
-      this.middleware.handle(req)
+      this.middleware.handle(req, stop)
     }
     if (this.middleware instanceof AfterMiddleware && res !== null) {
-      this.middleware.handle(req, res)
+      this.middleware.handle(req, res, stop)
     }
   }
 }
