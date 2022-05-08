@@ -1,6 +1,10 @@
 import { Facade } from './facade'
 import pino, { Logger as Log, LoggerOptions } from 'pino'
 
+type MinimalLoggingProps = {
+  message: string
+}
+
 export class LoggingImplementation extends Facade {
   private logger: Log
 
@@ -18,23 +22,23 @@ export class LoggingImplementation extends Facade {
     this.logger = pino(options)
   }
 
-  debug(params: object) {
+  debug(params: MinimalLoggingProps & { [key: string]: any }) {
     this.logger.debug(params)
   }
 
-  warn(params: object) {
+  warn(params: MinimalLoggingProps & { [key: string]: any }) {
     this.logger.warn(params)
   }
 
-  error(params: object) {
+  error(params: MinimalLoggingProps & { [key: string]: any }) {
     this.logger.error(params)
   }
 
-  fatal(params: object) {
+  fatal(params: MinimalLoggingProps & { [key: string]: any }) {
     this.logger.fatal(params)
   }
 
-  trace(params: object) {
+  trace(params: MinimalLoggingProps & { [key: string]: any }) {
     this.logger.trace(params)
   }
 }
