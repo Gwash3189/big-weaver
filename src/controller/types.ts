@@ -11,6 +11,4 @@ export interface IController {
   head: Action
   options: Action
 }
-export type Before = (req: NextApiRequest, stop: () => void) => ActionReturn
-export type After = (req: NextApiRequest, res: NextApiResponse, stop: () => void) => ActionReturn
-export type Middleware = Before | After
+export type Middleware = (req: NextApiRequest, res: NextApiResponse, stop: () => void) => ActionReturn

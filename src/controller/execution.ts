@@ -10,7 +10,7 @@ let endTime = Date.now()
 let difference = 0
 
 async function executeRequest(method: string, instance: Controller, req: NextApiRequest, res: NextApiResponse) {
-  MiddlewareExecutor.before(method, instance, req)
+  MiddlewareExecutor.before(method, instance, req, res)
   const returnValue = await Reflect.apply(Reflect.get(instance, method), instance, [req, res])
   MiddlewareExecutor.after(method, instance, req, res)
   stopCycleTimer()

@@ -129,21 +129,22 @@ describe('MiddlewareExecutor', () => {
       }
     }
 
-    let middleware: jest.Mock, req: NextApiRequest, mockController: TestController
+    let middleware: jest.Mock, req: NextApiRequest, res: NextApiResponse, mockController: TestController
 
     beforeEach(() => {
       middleware = jest.fn()
       req = (jest.fn() as unknown) as NextApiRequest
+      res = (jest.fn() as unknown) as NextApiResponse
       mockController = new TestController()
     })
 
     describe('when no methods have been excluded or included', () => {
       beforeEach(() => {
-        MiddlewareExecutor.before('get', mockController, req)
+        MiddlewareExecutor.before('get', mockController, req, res)
       })
 
       it('executes the middleware', () => {
-        expect(middleware).toHaveBeenCalledWith(req, expect.any(Function))
+        expect(middleware).toHaveBeenCalledWith(req, res, expect.any(Function))
       })
     })
 
@@ -164,11 +165,11 @@ describe('MiddlewareExecutor', () => {
 
       describe('when there is a get request', () => {
         beforeEach(() => {
-          MiddlewareExecutor.before('get', mockController, req)
+          MiddlewareExecutor.before('get', mockController, req, res)
         })
 
         it('executes the middles', () => {
-          expect(middleware).toHaveBeenCalledWith(req, expect.any(Function))
+          expect(middleware).toHaveBeenCalledWith(req, res, expect.any(Function))
         })
       })
 
@@ -176,8 +177,9 @@ describe('MiddlewareExecutor', () => {
         beforeEach(() => {
           middleware = jest.fn()
           req = (jest.fn() as unknown) as NextApiRequest
+          res = (jest.fn() as unknown) as NextApiResponse
           mockController = new OnlyController()
-          MiddlewareExecutor.before('post', mockController, req)
+          MiddlewareExecutor.before('post', mockController, req, res)
         })
 
         it('does not execute the middles', () => {
@@ -191,7 +193,7 @@ describe('MiddlewareExecutor', () => {
           constructor() {
             super()
 
-            this.before((_req, stop) => {
+            this.before((_req, _res, stop) => {
               stop()
             })
 

@@ -55,7 +55,7 @@ describe('Controller', () => {
         constructor() {
           super()
 
-          this.before((_req, stop) => {
+          this.before((_req, _res, stop) => {
             stop()
           })
 

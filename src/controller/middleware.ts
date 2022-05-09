@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Controller } from './controller'
-import { After, Before } from './types'
+import { Middleware as IMiddleware } from './types'
 
 export class Middleware {
-  constructor(public handle: Before | After, private _except: Array<string> = [], private _only: Array<string> = []) {
+  constructor(public handle: IMiddleware, private _except: Array<string> = [], private _only: Array<string> = []) {
     this.handle = handle
     this._except = _except
     this._only = _only
@@ -43,13 +43,13 @@ export class Middleware {
 }
 
 export class BeforeMiddleware extends Middleware {
-  constructor(public handle: Before) {
+  constructor(public handle: IMiddleware) {
     super(handle)
   }
 }
 
 export class AfterMiddleware extends Middleware {
-  constructor(public handle: After) {
+  constructor(public handle: IMiddleware) {
     super(handle)
   }
 }
@@ -71,7 +71,7 @@ export class MiddlewareProvider {
 export class MiddlewareExecutor {
   constructor(protected middleware: Middleware, private method: string) {}
 
-  static before(method: string, controller: Controller, req: NextApiRequest) {
+  static before(method: string, controller: Controller, req: NextApiRequest, res: NextApiResponse) {
     let shouldStop = false
 
     const stop = () => {
@@ -84,7 +84,7 @@ export class MiddlewareExecutor {
 
     for (let index = 0; index < middleware.length; index++) {
       const executor = middleware[index]
-      executor.execute(req, null, stop)
+      executor.execute(req, res, stop)
       if (shouldStop) {
         break
       }
@@ -119,12 +119,7 @@ export class MiddlewareExecutor {
     return this.middleware.shouldExecute(this.method)
   }
 
-  execute(req: NextApiRequest, res: NextApiResponse | null, stop: () => void) {
-    if (this.middleware instanceof BeforeMiddleware) {
-      this.middleware.handle(req, stop)
-    }
-    if (this.middleware instanceof AfterMiddleware && res !== null) {
-      this.middleware.handle(req, res, stop)
-    }
+  execute(req: NextApiRequest, res: NextApiResponse, stop: () => void) {
+    this.middleware.handle(req, res, stop)
   }
 }

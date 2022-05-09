@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { container } from 'tsyringe'
 import { constructor } from 'tsyringe/dist/typings/types'
 import { AfterMiddleware, BeforeMiddleware, MiddlewareProvider } from './middleware'
-import { After, Before, IController } from './types'
+import { IController, Middleware } from './types'
 
 export class Controller implements IController {
   private readonly beforeMiddleware: Array<BeforeMiddleware> = []
@@ -14,13 +14,13 @@ export class Controller implements IController {
     })
   }
 
-  protected before(runner: Before) {
+  protected before(runner: Middleware) {
     const middleware = new BeforeMiddleware(runner)
     this.beforeMiddleware.push(middleware)
     return new MiddlewareProvider(middleware)
   }
 
-  protected after(runner: After) {
+  protected after(runner: Middleware) {
     const middleware = new AfterMiddleware(runner)
     this.afterMiddleware.push(middleware)
     return new MiddlewareProvider(middleware)
