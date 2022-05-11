@@ -1,3 +1,5 @@
+/* eslint-disable import/first */
+/* eslint-disable prettier/prettier */
 const debugMock = jest.fn()
 const warnMock = jest.fn()
 const errorMock = jest.fn()
@@ -17,7 +19,6 @@ jest.mock('pino', () => {
 
 import pino from 'pino'
 import { Logger } from '../src/logger'
-
 
 describe('Logger', () => {
   describe('#new', () => {
