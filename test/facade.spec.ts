@@ -1,4 +1,3 @@
-import 'reflect-metadata'
 import { Facade } from '../src/facade'
 
 describe('Facade', () => {
@@ -45,6 +44,16 @@ describe('Facade', () => {
 
       Test.reset('hello')
       expect(Test.hello).not.toEqual(mock)
+    })
+  })
+
+  describe('#mix', () => {
+    class Test {}
+    const result = Facade.mix<Test>(Test)
+
+    it('mixes the static methods of the Facade class with the provided class', () => {
+      expect(result.mock).toBe(expect.any(Function))
+      expect(result.reset).toBe(expect.any(Function))
     })
   })
 })

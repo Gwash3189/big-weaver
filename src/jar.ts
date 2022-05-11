@@ -1,23 +1,25 @@
-import { constructor } from "./types"
+import { Facade } from "./facade"
 
-export class Jar<U> {
-  private jar: Map<string, U>
+export class Jar<U> extends Facade {
+  protected jar: Map<string, U>
 
   constructor() {
+    super()
+
     this.jar = new Map<string, U>()
   }
 
-  set(name: string, instance: constructor<U>) {
-    return this.jar.set(name, new instance)
+  set(name: string, instance: U) {
+    this.jar.set(name, instance)
   }
 
-  get(name: string) {
+  get<T>(name: string) {
     const item = this.jar.get(name)
 
     if (item === undefined) {
       throw new Error(`${name} not found in Jar`)
     }
 
-    return item
+    return item as unknown as T
   }
 }

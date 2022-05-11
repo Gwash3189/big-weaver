@@ -1,17 +1,17 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { container } from 'tsyringe'
 import { Facade } from './facade'
 import { serialize, CookieSerializeOptions } from 'cookie'
-import { RequestKey, ResponseKey } from './container'
+import { RequestKey, ResponseKey } from './network-jar'
+import { NetworkJar } from './network-jar'
 
 export class Cookie extends Facade {
   static set(name: string, value: any, options: CookieSerializeOptions = {}) {
-    const response = container.resolve<NextApiResponse>(ResponseKey)
+    const response = NetworkJar.get<NextApiResponse>(ResponseKey)
     response.setHeader('Set-Cookie', [...((response.getHeader('Set-Cookie') as Array<string> | undefined) || []), serialize(name, value, options)])
   }
 
   static get(name: string) {
-    const request = container.resolve<NextApiRequest>(RequestKey)
+    const request = NetworkJar.get<NextApiRequest>(RequestKey)
     return request.cookies[name]
   }
 

@@ -1,5 +1,3 @@
-import 'reflect-metadata'
-
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Controller, install } from '../../src'
 

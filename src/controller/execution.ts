@@ -1,27 +1,19 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { container } from 'tsyringe'
-import { RequestKey, ResponseKey } from '../container'
+import { RequestKey, ResponseKey } from '../network-jar'
 import { Controller } from './controller'
 import { ControllerJar } from './jar'
 import { MiddlewareExecutor } from './middleware'
 import { Logger } from '../logger'
 import { constructor } from '../types'
+import { NetworkJar } from '../network-jar'
 
 let startTime = Date.now()
 let endTime = Date.now()
 let difference = 0
 
-export async function executeRequest(method: string, instance: Controller, req: NextApiRequest, res: NextApiResponse) {
-  MiddlewareExecutor.before(method, instance, req, res)
-  const returnValue = await Reflect.apply(Reflect.get(instance, method), instance, [req, res])
-  MiddlewareExecutor.after(method, instance, req, res)
-  stopCycleTimer()
-  return returnValue
-}
-
 function registerRequestAndResponseObjects(req: NextApiRequest, res: NextApiResponse) {
-  container.register(RequestKey, { useValue: req })
-  container.register(ResponseKey, { useValue: res })
+  NetworkJar.set(RequestKey, req)
+  NetworkJar.set(ResponseKey, res)
 }
 
 function startCycleTimer() {
@@ -36,13 +28,21 @@ function stopCycleTimer() {
 }
 
 function getControllerInstance(controller: Function) {
-  const instance = ControllerJar.get(controller.name)
+  const instance = ControllerJar.get<Controller>(controller.name)
   Logger.debug({ message: 'Controller instance resolved', controller: instance.constructor.name })
   return instance
 }
 
+export async function executeRequest(method: string, instance: Controller, req: NextApiRequest, res: NextApiResponse) {
+  MiddlewareExecutor.before(method, instance, req, res)
+  const returnValue = await Reflect.apply(Reflect.get(instance, method), instance, [req, res])
+  MiddlewareExecutor.after(method, instance, req, res)
+  stopCycleTimer()
+  return returnValue
+}
+
 export function install(controller: constructor<Controller>) {
-  ControllerJar.set(controller.name, controller)
+  ControllerJar.set(controller.name, new controller())
   return async function handler(req: NextApiRequest, res: NextApiResponse) {
     startCycleTimer()
     registerRequestAndResponseObjects(req, res)

@@ -1,5 +1,3 @@
-import 'reflect-metadata'
-
 import { ConfigurationController } from '../../src/controllers/configuration'
 import { Auth } from '../../src/auth'
 import { NextApiRequest, NextApiResponse } from 'next'

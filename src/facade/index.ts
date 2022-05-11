@@ -11,4 +11,11 @@ export class Facade {
       ;(this as { [key: string]: any })[method] = MethodJar.get(`${this.name}-${method}`)
     })
   }
+
+  static mix<T>(target: Function) {
+    (target as { [key: string]: any }).mock = Facade.mock.bind(target);
+    (target as { [key: string]: any }).reset = Facade.mock.bind(target);
+
+    return target as unknown as T & typeof Facade
+  }
 }

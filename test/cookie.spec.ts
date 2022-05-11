@@ -1,6 +1,7 @@
-import 'reflect-metadata'
-import { container } from 'tsyringe'
+import { NextApiRequest, NextApiResponse } from 'next'
 import { Cookie } from '../src'
+import { RequestKey, ResponseKey } from '../src/network-jar'
+import { NetworkJar } from '../src/network-jar'
 
 describe('Cookie', () => {
   let mockResponse: object, mockSetHeaders: jest.Mock
@@ -12,7 +13,7 @@ describe('Cookie', () => {
         getHeader: jest.fn(() => []),
         setHeader: mockSetHeaders,
       }
-      container.register('response', { useValue: mockResponse })
+      NetworkJar.set(ResponseKey, mockResponse as NextApiResponse)
       Cookie.set('name', 123)
     })
 
@@ -27,7 +28,7 @@ describe('Cookie', () => {
           getHeader: jest.fn(),
           setHeader: mockSetHeaders,
         }
-        container.register('response', { useValue: mockResponse })
+        NetworkJar.set(ResponseKey, mockResponse as NextApiResponse)
         Cookie.set('name', 123)
       })
 
@@ -44,7 +45,7 @@ describe('Cookie', () => {
         getHeader: jest.fn(() => []),
         setHeader: mockSetHeaders,
       }
-      container.register('response', { useValue: mockResponse })
+      NetworkJar.set(ResponseKey, mockResponse as NextApiResponse)
       Cookie.remove('name')
     })
 
@@ -66,7 +67,7 @@ describe('Cookie', () => {
           name: 123,
         },
       }
-      container.register('request', { useValue: mockRequest })
+      NetworkJar.set(RequestKey, mockRequest as NextApiRequest)
     })
 
     it('sets a cookie on the response', () => {
