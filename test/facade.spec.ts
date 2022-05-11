@@ -46,14 +46,4 @@ describe('Facade', () => {
       expect(Test.hello).not.toEqual(mock)
     })
   })
-
-  describe('#mix', () => {
-    class Test {}
-    const result = Facade.mix<Test>(Test)
-
-    it('mixes the static methods of the Facade class with the provided class', () => {
-      expect(result.mock).toBeTruthy()
-      expect(result.reset).toBeTruthy()
-    })
-  })
 })
