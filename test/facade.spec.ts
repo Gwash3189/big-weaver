@@ -52,8 +52,8 @@ describe('Facade', () => {
     const result = Facade.mix<Test>(Test)
 
     it('mixes the static methods of the Facade class with the provided class', () => {
-      expect(result.mock).toBe(expect.any(Function))
-      expect(result.reset).toBe(expect.any(Function))
+      expect(result.mock).toBeTruthy()
+      expect(result.reset).toBeTruthy()
     })
   })
 })
