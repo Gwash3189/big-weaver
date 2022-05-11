@@ -1,4 +1,4 @@
-import { Facade } from "./facade"
+import { Facade } from './facade'
 
 export class Jar<U> extends Facade {
   protected jar: Map<string, U>
@@ -20,6 +20,6 @@ export class Jar<U> extends Facade {
       throw new Error(`${name} not found in Jar`)
     }
 
-    return item as unknown as T
+    return (item as unknown) as T
   }
 }

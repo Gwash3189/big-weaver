@@ -1,3 +1,3 @@
 export type constructor<T> = {
-  new (...args: any[]): T;
-};
+  new (...args: any[]): T
+}

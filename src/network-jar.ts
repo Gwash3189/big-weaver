@@ -1,5 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { Jar } from "./jar";
+import { NextApiRequest, NextApiResponse } from 'next'
+import { Jar } from './jar'
 
 export const ResponseKey = 'response'
 export const RequestKey = 'request'
