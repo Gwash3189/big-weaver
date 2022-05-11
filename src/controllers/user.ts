@@ -4,9 +4,8 @@ import { Controller } from '../controller'
 import { Logger } from '../logger'
 import { getBody } from '../request'
 
-
 type MinimalNewUserBody = {
-  email: string,
+  email: string
   password: string
   confirmationPassword: string
 }
@@ -14,7 +13,7 @@ type MinimalNewUserBody = {
 type MinimalNewUser = Omit<MinimalNewUserBody, 'confirmationPassword'>
 
 type MinimalUser = {
-  id: string | number,
+  id: string | number
   email: string
 }
 
@@ -23,11 +22,11 @@ export abstract class UserController<U> extends Controller {
     const newUserBody = getBody<MinimalNewUserBody>(req)
 
     if (newUserBody.password === newUserBody.confirmationPassword) {
-      const hashedPassword =  await Auth.hash(newUserBody.password)
+      const hashedPassword = await Auth.hash(newUserBody.password)
       this.beforeUserCreation(req, res)
       const user = await this.createUser({
         email: newUserBody.email,
-        password: hashedPassword
+        password: hashedPassword,
       })
       Logger.debug({ message: 'user created' })
       this.afterUserCreation(req, res)
@@ -38,19 +37,13 @@ export abstract class UserController<U> extends Controller {
     }
   }
 
-  beforeUserCreation(_req: NextApiRequest, _res: NextApiResponse) {
-    return undefined
-  }
-
-  afterUserCreation(_req: NextApiRequest, _res: NextApiResponse) {
-    return undefined
-  }
-
-  protected abstract createUser(userMinimalNewUser: MinimalNewUser): Promise<U & MinimalUser | null>
+  protected abstract beforeUserCreation(_req: NextApiRequest, _res: NextApiResponse): void
+  protected abstract afterUserCreation(_req: NextApiRequest, _res: NextApiResponse): void
+  protected abstract createUser(userMinimalNewUser: MinimalNewUser): Promise<(U & MinimalUser) | null>
 
   private cantCreateUser(res: NextApiResponse) {
     return res.status(500).json({
-      error: 'unable to create user'
+      error: 'unable to create user',
     })
   }
 }

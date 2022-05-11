@@ -1,16 +1,14 @@
 import { Facade } from './facade'
 import bcrypt from 'bcrypt'
 
-class HashImplementation extends Facade {
-  private saltRounds = 10
+const saltRounds = 10
 
-  async make(password: string, options: { rounds: number } = { rounds: this.saltRounds }) {
+export class Hash extends Facade {
+  static async make(password: string, options: { rounds: number } = { rounds: saltRounds }) {
     return await bcrypt.hash(password, options.rounds)
   }
 
-  async check(plainPassword: string, hashedPassword: string) {
+  static async check(plainPassword: string, hashedPassword: string) {
     return await bcrypt.compare(plainPassword, hashedPassword)
   }
 }
-
-export const Hash = Facade.create(HashImplementation)

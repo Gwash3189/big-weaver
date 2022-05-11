@@ -1,46 +1,38 @@
 import { Facade } from './facade'
-import pino, { Logger as Log, LoggerOptions } from 'pino'
+import pino, { LoggerOptions } from 'pino'
 
 type MinimalLoggingProps = {
   message: string
-}
+} & { [key: string]: any }
 
-export class LoggingImplementation extends Facade {
-  private logger: Log
+const value = process.env.LOGGING_LEVEL || (process.env.NODE_ENV === 'production' && 'warn') || (process.env.NODE_ENV === 'test' && 'silent') || 'trace'
+let logger = pino({
+  redact: ['email', 'password', 'hashedPassword', 'name', 'lastName', 'firstName'],
+  level: value,
+})
 
-  constructor() {
-    super()
-
-    let value = process.env.LOGGING_LEVEL || (process.env.NODE_ENV === 'production' && 'warn') || (process.env.NODE_ENV === 'test' && 'silent') || 'trace'
-    this.logger = pino({
-      redact: ['email', 'password', 'hashedPassword', 'name', 'lastName', 'firstName'],
-      level: value,
-    })
+export class Logger extends Facade {
+  static configure(options: LoggerOptions) {
+    logger = pino(options)
   }
 
-  configure(options: LoggerOptions) {
-    this.logger = pino(options)
+  static debug(params: MinimalLoggingProps) {
+    logger.debug(params)
   }
 
-  debug(params: MinimalLoggingProps & { [key: string]: any }) {
-    this.logger.debug(params)
+  static warn(params: MinimalLoggingProps) {
+    logger.warn(params)
   }
 
-  warn(params: MinimalLoggingProps & { [key: string]: any }) {
-    this.logger.warn(params)
+  static error(params: MinimalLoggingProps) {
+    logger.error(params)
   }
 
-  error(params: MinimalLoggingProps & { [key: string]: any }) {
-    this.logger.error(params)
+  static fatal(params: MinimalLoggingProps) {
+    logger.fatal(params)
   }
 
-  fatal(params: MinimalLoggingProps & { [key: string]: any }) {
-    this.logger.fatal(params)
-  }
-
-  trace(params: MinimalLoggingProps & { [key: string]: any }) {
-    this.logger.trace(params)
+  static trace(params: MinimalLoggingProps) {
+    logger.trace(params)
   }
 }
-
-export const Logger = Facade.create(LoggingImplementation)

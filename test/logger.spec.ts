@@ -1,20 +1,22 @@
-import 'reflect-metadata'
-
-import { Logger } from '../src/logger'
 import pino from 'pino'
+import { Logger } from '../src/logger'
 
-const pinoInternals = {
-  debug: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
-  fatal: jest.fn(),
-  trace: jest.fn(),
+const debugMock = jest.fn()
+const warnMock = jest.fn()
+const errorMock = jest.fn()
+const fatalMock = jest.fn()
+const traceMock = jest.fn()
+
+const pinoMock = {
+  debug: debugMock,
+  warn: warnMock,
+  error: errorMock,
+  fatal: fatalMock,
+  trace: traceMock,
 }
 
 jest.mock('pino', () => {
-  return jest.fn(() => {
-    return pinoInternals
-  })
+  return jest.fn(() => pinoMock)
 })
 
 describe('Logger', () => {
@@ -63,7 +65,7 @@ describe('Logger', () => {
       it('passes the json object to pino', () => {
         let loggingObject = { message: 'hello world ' }
         ;(Logger as any)[method](loggingObject)
-        expect((pinoInternals as any)[method]).toHaveBeenCalledWith(loggingObject)
+        expect((pinoMock as any)[method]).toHaveBeenCalledWith(loggingObject)
       })
     })
   })
