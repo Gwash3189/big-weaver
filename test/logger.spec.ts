@@ -1,6 +1,3 @@
-import pino from 'pino'
-import { Logger } from '../src/logger'
-
 const debugMock = jest.fn()
 const warnMock = jest.fn()
 const errorMock = jest.fn()
@@ -14,10 +11,12 @@ const pinoMock = {
   fatal: fatalMock,
   trace: traceMock,
 }
-
 jest.mock('pino', () => {
   return jest.fn(() => pinoMock)
 })
+
+import pino from 'pino'
+import { Logger } from '../src/logger'
 
 describe('Logger', () => {
   describe('#new', () => {

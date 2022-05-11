@@ -1,21 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { constructor } from '../types'
 import { AfterMiddleware, BeforeMiddleware, MiddlewareProvider } from './middleware'
-import { IController, Middleware } from './types'
+import { Middleware } from './types'
 
-const controllerJar = new Map<string, constructor<Controller>>()
-
-export class Jar {
-  static set(name: string, instance: constructor<Controller>) {
-    return controllerJar.set(name, instance)
-  }
-
-  static get(name: string) {
-    return controllerJar.get(name)
-  }
-}
-
-export class Controller implements IController {
+export class Controller {
   private readonly beforeMiddleware: Array<BeforeMiddleware> = []
   private readonly afterMiddleware: Array<AfterMiddleware> = []
 
