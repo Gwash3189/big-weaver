@@ -9,6 +9,7 @@ export interface IController {
   post: Action
   patch: Action
   head: Action
-  options: Action
+  options: Action,
+
 }
 export type Middleware = (req: NextApiRequest, res: NextApiResponse, stop: () => void) => ActionReturn

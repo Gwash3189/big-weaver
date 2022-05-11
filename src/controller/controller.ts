@@ -1,18 +1,23 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { container } from 'tsyringe'
-import { constructor } from 'tsyringe/dist/typings/types'
+import { constructor } from '../types'
 import { AfterMiddleware, BeforeMiddleware, MiddlewareProvider } from './middleware'
 import { IController, Middleware } from './types'
+
+const controllerJar = new Map<string, constructor<Controller>>()
+
+export class Jar {
+  static set(name: string, instance: constructor<Controller>) {
+    return controllerJar.set(name, instance)
+  }
+
+  static get(name: string) {
+    return controllerJar.get(name)
+  }
+}
 
 export class Controller implements IController {
   private readonly beforeMiddleware: Array<BeforeMiddleware> = []
   private readonly afterMiddleware: Array<AfterMiddleware> = []
-
-  constructor() {
-    container.register<IController>(this.constructor as constructor<IController>, {
-      useValue: this,
-    })
-  }
 
   protected before(runner: Middleware) {
     const middleware = new BeforeMiddleware(runner)

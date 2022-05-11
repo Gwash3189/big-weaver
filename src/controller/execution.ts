@@ -1,9 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { container } from 'tsyringe'
 import { RequestKey, ResponseKey } from '../container'
-import { Controller } from './controller'
+import { Controller, Jar } from './controller'
 import { MiddlewareExecutor } from './middleware'
 import { Logger } from '../logger'
+import { constructor } from '../types'
 
 let startTime = Date.now()
 let endTime = Date.now()
@@ -34,12 +35,19 @@ function stopCycleTimer() {
 }
 
 function getControllerInstance(controller: Function) {
-  const instance = container.resolve<Controller>(controller as typeof Controller)
+  const Constructor = Jar.get(controller.name)
+
+  if (!Constructor) {
+    throw new Error(`controller ${controller.name} not found in ControllerJar`)
+  }
+
+  const instance = new Constructor()
   Logger.debug({ message: 'Controller instance resolved', controller: instance.constructor.name })
   return instance
 }
 
-export function install(controller: Function) {
+export function install(controller: constructor<Controller>) {
+  Jar.set(controller.name, controller)
   return async function handler(req: NextApiRequest, res: NextApiResponse) {
     startCycleTimer()
     registerRequestAndResponseObjects(req, res)
