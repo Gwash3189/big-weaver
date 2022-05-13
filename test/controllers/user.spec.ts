@@ -38,6 +38,7 @@ describe('UserController', () => {
           password: '123',
           confirmationPassword: '123',
         })
+
         response = await post(UserController, request)
       })
 
