@@ -40,11 +40,13 @@ export abstract class AuthController<U> extends Controller {
     }
 
     Logger.debug({ message: 'user found and passwords match' })
+
     Auth.set({
       user: {
         id: user.id,
       },
     })
+
     return res.json({ data: { user } })
   }
 

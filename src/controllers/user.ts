@@ -10,9 +10,9 @@ type MinimalNewUserBody = {
   confirmationPassword: string
 }
 
-type MinimalNewUser = Omit<MinimalNewUserBody, 'confirmationPassword'>
+export type MinimalNewUser = Omit<MinimalNewUserBody, 'confirmationPassword'>
 
-type MinimalUser = {
+export type MinimalUser = {
   id: string | number
   email: string
 }
@@ -37,13 +37,13 @@ export abstract class UserController<U> extends Controller {
     }
   }
 
-  protected abstract beforeUserCreation(_req: NextApiRequest, _res: NextApiResponse): void
-  protected abstract afterUserCreation(_req: NextApiRequest, _res: NextApiResponse): void
   protected abstract createUser(userMinimalNewUser: MinimalNewUser): Promise<(U & MinimalUser) | null>
+  protected beforeUserCreation(_req: NextApiRequest, _res: NextApiResponse): void {}
+  protected afterUserCreation(_req: NextApiRequest, _res: NextApiResponse): void {}
 
   private cantCreateUser(res: NextApiResponse) {
     return res.status(500).json({
-      error: 'unable to create user',
+      errors: ['unable to create user'],
     })
   }
 }

@@ -7,6 +7,22 @@ import { Logger } from '../logger'
 import { constructor } from '../types'
 import { NetworkJar } from '../network-jar'
 
+export type SupportedRequestMethods =
+  | 'GET'
+  | 'get'
+  | 'PUT'
+  | 'put'
+  | 'DELETE'
+  | 'delete'
+  | 'POST'
+  | 'post'
+  | 'PATCH'
+  | 'patch'
+  | 'HEAD'
+  | 'head'
+  | 'OPTIONS'
+  | 'options'
+
 let startTime = Date.now()
 let endTime = Date.now()
 let difference = 0
