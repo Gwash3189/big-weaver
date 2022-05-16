@@ -3,7 +3,6 @@
   "include": ["src", "types"],
   "compilerOptions": {
     "target": "ESNext",
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "module": "esnext",
     "lib": ["dom", "esnext"],

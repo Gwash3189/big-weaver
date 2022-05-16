@@ -14,11 +14,11 @@ describe('Repository', () => {
   let findFirstMock: jest.Mock
   let findUniqueMock: jest.Mock
   class BaseRepository extends Repository<any, any> {
-    getDataType(client: typeof db) {
+    getDataType(client: any) {
       return client
     }
 
-    getClient() {
+    getClient(): any {
       return db
     }
   }

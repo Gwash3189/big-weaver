@@ -1,4 +1,4 @@
-import { PrismaClient } from '.prisma/client'
+import { PrismaClient } from '@prisma/client'
 import { Use, use } from '../client'
 
 export abstract class Repository<T, X> {
