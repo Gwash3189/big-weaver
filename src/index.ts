@@ -1,4 +1,4 @@
-export { BaseRepository, repository, Repositorys} from './db'
+export { BaseRepository, repository, Repositorys } from './db'
 export * from './request'
 export * from './facade'
 export * from './controller'

@@ -19,8 +19,7 @@ describe('BaseRepository', () => {
   })
 
   it('is registered in the container', () => {
-    expect(Repositorys.find(UserRepository))
-      .toBeInstanceOf(UserRepository)
+    expect(Repositorys.find(UserRepository)).toBeInstanceOf(UserRepository)
   })
 
   it('returns a mockable instance of a repository', async () => {
@@ -28,7 +27,10 @@ describe('BaseRepository', () => {
 
     expect(await repo.all()).toEqual([])
 
-    repo.mock('all', jest.fn(() => Promise.resolve([{ name: 'Adam' }])))
+    repo.mock(
+      'all',
+      jest.fn(() => Promise.resolve([{ name: 'Adam' }]))
+    )
 
     expect(await repo.all()).toEqual([{ name: 'Adam' }])
 
