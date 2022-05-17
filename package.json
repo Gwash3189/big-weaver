@@ -5,18 +5,7 @@
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
-    "src",
-    "auth",
-    "controller",
-    "controllers",
-    "db",
-    "facade",
-    "request",
-    "cookie",
-    "env",
-    "hash",
-    "jar",
-    "index"
+    "src"
   ],
   "engines": {
     "node": ">=10"
