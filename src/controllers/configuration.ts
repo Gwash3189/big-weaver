@@ -8,6 +8,10 @@ let configured = false
 const JWT_SECRET_KEY = 'JWT_SECRET'
 
 export class ConfigurationController extends Controller {
+  static configured() {
+    return configured
+  }
+
   constructor() {
     super()
 
@@ -42,9 +46,5 @@ export class ConfigurationController extends Controller {
 
   reset() {
     configured = false
-  }
-
-  isComplete() {
-    return configured
   }
 }
