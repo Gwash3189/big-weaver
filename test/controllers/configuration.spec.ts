@@ -24,7 +24,7 @@ describe('ConfigurationController', () => {
   })
 
   it('completes configuration after the before middleware', async () => {
-    expect(instance.isComplete()).toEqual(true)
+    expect(ConfigurationController.configured()).toEqual(true)
   })
 
   describe('when the JWT_SECRET exists', () => {
