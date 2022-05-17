@@ -67,58 +67,38 @@ export class ResponseBuilder extends Facade {
   }
 }
 
-export const get = async (controller: typeof Controller, req: RequestBuilder): Promise<ResponseType> => {
+async function requestMaker(method: SupportedRequestMethods, controller: typeof Controller, req: RequestBuilder = new RequestBuilder()): Promise<ResponseType> {
   const res = new ResponseBuilder()
   const handler = install(controller)
-  req.method('get')
+  req.method(method)
   await handler((req.build() as unknown) as NextApiRequest, (res as unknown) as NextApiResponse)
   return res.build()
 }
 
-export const post = async (controller: typeof Controller, req: RequestBuilder): Promise<ResponseType> => {
-  const res = new ResponseBuilder()
-  const handler = install(controller)
-  req.method('post')
-  await handler((req.build() as unknown) as NextApiRequest, (res as unknown) as NextApiResponse)
-  return res.build()
+export const get = async (controller: typeof Controller, req: RequestBuilder = new RequestBuilder()): Promise<ResponseType> => {
+  return requestMaker('get', controller, req)
 }
 
-export const put = async (controller: typeof Controller, req: RequestBuilder): Promise<ResponseType> => {
-  const res = new ResponseBuilder()
-  const handler = install(controller)
-  req.method('put')
-  await handler((req.build() as unknown) as NextApiRequest, (res as unknown) as NextApiResponse)
-  return res.build()
+export const post = async (controller: typeof Controller, req: RequestBuilder = new RequestBuilder()): Promise<ResponseType> => {
+  return requestMaker('post', controller, req)
 }
 
-export const del = async (controller: typeof Controller, req: RequestBuilder): Promise<ResponseType> => {
-  const res = new ResponseBuilder()
-  const handler = install(controller)
-  req.method('delete')
-  await handler((req.build() as unknown) as NextApiRequest, (res as unknown) as NextApiResponse)
-  return res.build()
+export const put = async (controller: typeof Controller, req: RequestBuilder = new RequestBuilder()): Promise<ResponseType> => {
+  return requestMaker('put', controller, req)
 }
 
-export const options = async (controller: typeof Controller, req: RequestBuilder): Promise<ResponseType> => {
-  const res = new ResponseBuilder()
-  const handler = install(controller)
-  req.method('options')
-  await handler((req.build() as unknown) as NextApiRequest, (res as unknown) as NextApiResponse)
-  return res.build()
+export const del = async (controller: typeof Controller, req: RequestBuilder = new RequestBuilder()): Promise<ResponseType> => {
+  return requestMaker('delete', controller, req)
 }
 
-export const patch = async (controller: typeof Controller, req: RequestBuilder): Promise<ResponseType> => {
-  const res = new ResponseBuilder()
-  const handler = install(controller)
-  req.method('patch')
-  await handler((req.build() as unknown) as NextApiRequest, (res as unknown) as NextApiResponse)
-  return res.build()
+export const options = async (controller: typeof Controller, req: RequestBuilder = new RequestBuilder()): Promise<ResponseType> => {
+  return requestMaker('options', controller, req)
 }
 
-export const head = async (controller: typeof Controller, req: RequestBuilder): Promise<ResponseType> => {
-  const res = new ResponseBuilder()
-  const handler = install(controller)
-  req.method('head')
-  await handler((req.build() as unknown) as NextApiRequest, (res as unknown) as NextApiResponse)
-  return res.build()
+export const patch = async (controller: typeof Controller, req: RequestBuilder = new RequestBuilder()): Promise<ResponseType> => {
+  return requestMaker('patch', controller, req)
+}
+
+export const head = async (controller: typeof Controller, req: RequestBuilder = new RequestBuilder()): Promise<ResponseType> => {
+  return requestMaker('head', controller, req)
 }
