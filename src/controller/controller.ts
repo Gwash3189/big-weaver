@@ -6,6 +6,10 @@ export class Controller {
   private readonly beforeMiddleware: Array<BeforeMiddleware> = []
   private readonly afterMiddleware: Array<AfterMiddleware> = []
 
+  static configuration = {
+    api: { bodyParser: true }
+  }
+
   protected before(runner: Middleware) {
     const middleware = new BeforeMiddleware(runner)
     this.beforeMiddleware.push(middleware)
