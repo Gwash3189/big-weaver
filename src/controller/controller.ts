@@ -1,13 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { Facade } from '../facade'
 import { AfterMiddleware, BeforeMiddleware, MiddlewareProvider } from './middleware'
 import { Middleware } from './types'
 
-export class Controller {
+export class Controller extends Facade {
   private readonly beforeMiddleware: Array<BeforeMiddleware> = []
   private readonly afterMiddleware: Array<AfterMiddleware> = []
 
   static configuration = {
-    api: { bodyParser: true }
+    api: { bodyParser: true },
   }
 
   protected before(runner: Middleware) {
