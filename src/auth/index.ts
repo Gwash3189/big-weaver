@@ -65,7 +65,7 @@ export class Auth extends Facade {
   }
 
   static async refresh(options: JWT.VerifyOptions = {}) {
-    const result = await Auth.verify(options) as JWTToken | false
+    const result = (await Auth.verify(options)) as JWTToken | false
 
     if (result !== false) {
       delete result.exp
