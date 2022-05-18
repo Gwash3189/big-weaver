@@ -10,7 +10,7 @@ export class Cookie extends Facade {
     response.setHeader('Set-Cookie', [...((response.getHeader('Set-Cookie') as Array<string> | undefined) || []), serialize(name, value, options)])
   }
 
-  static get(name: string) {
+  static get(name: string): string | undefined {
     const request = NetworkJar.get<NextApiRequest>(RequestKey)
     return request.cookies[name]
   }
