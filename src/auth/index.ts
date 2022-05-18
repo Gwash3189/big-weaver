@@ -2,10 +2,12 @@ import { Facade } from '../facade'
 import { Hash } from '../hash'
 import * as JWT from 'jsonwebtoken'
 import { Cookie } from '../cookie'
-import { NextApiRequest, NextApiResponse } from 'next'
 import { Logger } from '../logger'
+import { CookieSerializeOptions } from 'cookie'
 
 let secretOrPrivateKey: string | null = null
+
+export type JWTToken = { [key: string]: any }
 
 export class Auth extends Facade {
   static jwtCookie = 'baseline-jwt-cookie'
@@ -22,36 +24,56 @@ export class Auth extends Facade {
     return await Hash.make(password)
   }
 
-  static async jwt(args: { [key: string]: any }) {
-    if (secretOrPrivateKey === null) {
-      throw new Error('JWT Secret is not set. Please call Auth.configure to set the secret')
-    }
-
-    return await JWT.sign(JSON.stringify(args), secretOrPrivateKey)
+  static async getJwt(args: JWTToken, options: JWT.SignOptions = { expiresIn: '1h' }): Promise<string> {
+    return new Promise((resolve, reject) => {
+      if (secretOrPrivateKey === null) {
+        reject(new Error('JWT Secret is not set. Please call Auth.configure to set the secret'))
+      } else {
+        try {
+          resolve(JWT.sign(args, secretOrPrivateKey, options))
+        } catch (e) {
+          reject(e)
+        }
+      }
+    })
   }
 
-  static async set(args: { user: { id: string | number } } | { [key: string]: any }) {
-    Cookie.set(this.jwtCookie, Auth.jwt(args), { httpOnly: true, domain: '/' })
+  static async setJwt(args: JWTToken, cookieOptions: CookieSerializeOptions = {}, jwtOptions = {}) {
+    Cookie.set(this.jwtCookie, await Auth.getJwt(args, jwtOptions), { httpOnly: true, domain: '/', ...cookieOptions })
   }
 
-  static async verify(_req: NextApiRequest, res: NextApiResponse) {
-    const jwtCookie = Cookie.get(this.jwtCookie)
+  static async verify(options: JWT.VerifyOptions = {}) {
+    const jwtValue = Cookie.get(this.jwtCookie)
 
-    if (!jwtCookie) {
-      return res.status(401)
+    if (jwtValue === undefined) {
+      return false
+    } else {
+      if (secretOrPrivateKey) {
+        try {
+          return JWT.verify(jwtValue, secretOrPrivateKey, options)
+        } catch (e) {
+          const error: Error = e as Error
+          Logger.error({ message: error.toString() })
+
+          return false
+        }
+      } else {
+        Logger.error({ message: 'JWT Secret is not set. Please call Auth.configure to set the secret' })
+        throw new Error('JWT Secret is not set. Please call Auth.configure to set the secret')
+      }
+    }
+  }
+
+  static async refresh(options: JWT.VerifyOptions = {}) {
+    const result = await Auth.verify(options) as JWTToken | false
+
+    if (result !== false) {
+      delete result.exp
+      delete result.iat
+
+      await Auth.setJwt(result, {}, options)
     }
 
-    if (secretOrPrivateKey === null) {
-      Logger.error({ message: 'JWT Secret is not set. Please call Auth.configure to set the secret' })
-      return res.status(500)
-    }
-
-    const result = await JWT.verify(jwtCookie, secretOrPrivateKey)
-
-    if (!result) {
-      return res.status(401)
-    }
-
-    return undefined
+    return false
   }
 }
