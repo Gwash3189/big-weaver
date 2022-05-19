@@ -10,6 +10,13 @@ type MinimalNewUserBody = {
   confirmationPassword: string
 }
 
+type MinimalNewUserBodyWithHashedPassword = {
+  email: string
+  password: string
+  confirmationPassword: string,
+  hashedPassword: string
+}
+
 export type MinimalNewUser = Omit<MinimalNewUserBody, 'confirmationPassword'>
 
 export type MinimalUser = {
@@ -18,6 +25,13 @@ export type MinimalUser = {
 }
 
 export abstract class UserController<U> extends Controller {
+  constructor() {
+    super()
+  }
+
+  /**
+   * Used in creating a new user at signup. Unauthenticated.
+   */
   async post(req: NextApiRequest, res: NextApiResponse) {
     const newUserBody = getBody<MinimalNewUserBody>(req)
 
@@ -25,11 +39,18 @@ export abstract class UserController<U> extends Controller {
       const hashedPassword = await Auth.hash(newUserBody.password)
       this.beforeUserCreation(req, res)
       const user = await this.createUser({
-        email: newUserBody.email,
-        password: hashedPassword,
+        ...newUserBody,
+        hashedPassword: hashedPassword,
       })
+
+      if (user === null) {
+        Logger.error({ message: 'createUser in ${this.constructor.name} returned null. Returning 500.' })
+        res.status(500).json({ errors: ['user creation failed'] })
+      }
+
       Logger.debug({ message: 'user created' })
-      this.afterUserCreation(req, res)
+      this.afterUserCreation(req, res, user)
+      Auth.setJwt({ user: { id: user.id }})
       return res.json({ data: { user } })
     } else {
       Logger.debug({ message: 'users passwords do not match' })
@@ -37,9 +58,9 @@ export abstract class UserController<U> extends Controller {
     }
   }
 
-  protected abstract createUser(userMinimalNewUser: MinimalNewUser): Promise<(U & MinimalUser) | null>
+  protected abstract createUser(user: MinimalNewUserBodyWithHashedPassword & { [key: string]: string }): Promise<(U & { id: string | number })>
   protected beforeUserCreation(_req: NextApiRequest, _res: NextApiResponse): void {}
-  protected afterUserCreation(_req: NextApiRequest, _res: NextApiResponse): void {}
+  protected afterUserCreation(_req: NextApiRequest, _res: NextApiResponse, _user: U): void {}
 
   private cantCreateUser(res: NextApiResponse) {
     return res.status(500).json({

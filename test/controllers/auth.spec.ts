@@ -25,7 +25,7 @@ describe('AuthController', () => {
           email: 'email',
           password: '123',
         })
-        Auth.mock('set', jest.fn())
+        Auth.mock('setJwt', jest.fn())
         Auth.mock(
           'attempt',
           jest.fn(() => true)
@@ -47,7 +47,7 @@ describe('AuthController', () => {
       })
 
       it('sets the user auth cookie', () => {
-        expect(Auth.set).toHaveBeenCalledWith({
+        expect(Auth.setJwt).toHaveBeenCalledWith({
           user: {
             id: '1',
           },
@@ -63,7 +63,7 @@ describe('AuthController', () => {
           email: 'email',
           password: '321',
         })
-        Auth.mock('set', jest.fn())
+        Auth.mock('setJwt', jest.fn())
         Auth.mock(
           'attempt',
           jest.fn(() => false)
@@ -82,7 +82,7 @@ describe('AuthController', () => {
       })
 
       it('does not set the user auth cookie', () => {
-        expect(Auth.set).not.toHaveBeenCalled()
+        expect(Auth.setJwt).not.toHaveBeenCalled()
       })
     })
   })
