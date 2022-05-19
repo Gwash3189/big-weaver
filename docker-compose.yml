@@ -1,0 +1,13 @@
+# docker-compose.yml
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: adam.beck
+      POSTGRES_PASSWORD: adam.beck
+      POSTGRES_DB: nextjsbackendhelpers
+    volumes:
+       - ./postgres/data:/var/lib/postgresql/data
