@@ -2,23 +2,32 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { Controller, install } from '../../controller'
 import { SupportedRequestMethods } from '../../controller/execution'
 import { Facade } from '../../facade'
+import { serialize } from 'cookie'
 
 export type RequestType =
   | {
       body: { [key: string]: any }
-      method: string
+      method: string,
+      cookies: string
     }
   | { [key: string]: any }
 
 export class RequestBuilder {
   private request: RequestType
+  private cookies: string
 
   constructor() {
     this.request = {}
+    this.cookies = ''
   }
 
   body(json: { [key: string]: any }) {
     this.request.body = json
+    return this
+  }
+
+  cookie(name: string, value: string, options: {}) {
+    this.request.cookies = [...((this.cookies.split(';') as Array<string> | undefined) || []), serialize(name, value, options)]
     return this
   }
 
