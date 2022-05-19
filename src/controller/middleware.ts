@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Controller } from './controller'
+import { SupportedRequestMethods } from './execution'
 import { Middleware as IMiddleware } from './types'
 
 export class Middleware {
@@ -57,12 +58,12 @@ export class AfterMiddleware extends Middleware {
 export class MiddlewareProvider {
   constructor(protected middleware: Middleware) {}
 
-  except(action: string) {
+  except(action: SupportedRequestMethods) {
     this.middleware.except(action)
     return this
   }
 
-  only(action: string) {
+  only(action: SupportedRequestMethods) {
     this.middleware.only(action)
     return this
   }
