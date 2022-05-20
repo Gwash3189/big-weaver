@@ -19,6 +19,7 @@
     "build": "tsdx build && cp -a ./dist/. ./",
     "build:local": "tsdx build && cp -a ./dist/. ./ && npm run clean",
     "test": "tsdx test",
+    "test:integration": "docker compose up -d && sleep 4 && prisma migrate reset -f && INTEGRATION=true tsdx test && docker compose down",
     "test:watch": "tsdx test --watch",
     "test:coverage": "npx tsdx test --coverage",
     "lint": "tsdx lint src/**/*.ts test/**/*.spec.ts",
