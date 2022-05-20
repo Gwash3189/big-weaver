@@ -4,13 +4,15 @@ import { Auth } from '../../src/auth'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { PrismaClient } from '@prisma/client'
 
+const describeif = (condition: boolean) => (condition ? describe : describe.skip)
+
 describe('UserController', () => {
-  type User = { id: string, name: string, email: string, hashedPassword: string }
+  type User = { id: string; name: string; email: string; hashedPassword: string }
   const createdUser = {
     id: '1',
     email: 'email@email.com',
     name: 'Adam',
-    hashedPassword: '123'
+    hashedPassword: '123',
   }
   let beforeMock = jest.fn()
   let afterMock = jest.fn()
@@ -36,14 +38,16 @@ describe('UserController', () => {
     Auth.reset('setJwt')
   })
 
-  describe('integration tests', () => {
+  describeif((process.env.INTEGRATION as any) === 'true')('integration tests', () => {
     class UserController extends UController<User> {
-      protected async createUser(user: { email: string; password: string; confirmationPassword: string; hashedPassword: string } & { [key: string]: string }): Promise<{ id: string; name: string; email: string; hashedPassword: string }> {
+      protected async createUser(
+        user: { email: string; password: string; confirmationPassword: string; hashedPassword: string } & { [key: string]: string }
+      ): Promise<{ id: string; name: string; email: string; hashedPassword: string }> {
         return await client.user.create({
           data: {
             email: user.email,
             name: 'thisisausername',
-            hashedPassword: user.hashedPassword
+            hashedPassword: user.hashedPassword,
           },
         })
       }
@@ -86,7 +90,7 @@ describe('UserController', () => {
             email: 'user@admin.com',
             id: expect.any(String),
             name: 'thisisausername',
-            hashedPassword: expect.any(String)
+            hashedPassword: expect.any(String),
           },
         },
       })

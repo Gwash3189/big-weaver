@@ -3,7 +3,9 @@ import { BaseRepository } from '../../src'
 import { repository } from '../../src/db'
 import { Repositorys } from '../../src/db/repository/base'
 
-describe('BaseRepository', () => {
+const describeif = (condition: boolean) => (condition ? describe : describe.skip)
+
+describeif((process.env.INTEGRATION as any) === 'true')('BaseRepository', () => {
   class UserRepository extends BaseRepository<Prisma.UserDelegate<any>, User> {
     createClient(): PrismaClient {
       return new PrismaClient()
@@ -25,7 +27,7 @@ describe('BaseRepository', () => {
   it('returns a mockable instance of a repository', async () => {
     const repo = Repositorys.find(UserRepository)
 
-    expect(await repo.all()).toEqual([])
+    expect(await repo.all()).toEqual(expect.any(Array))
 
     repo.mock(
       'all',
@@ -36,6 +38,6 @@ describe('BaseRepository', () => {
 
     repo.reset('all')
 
-    expect(await repo.all()).toEqual([])
+    expect(await repo.all()).toEqual(expect.any(Array))
   })
 })
