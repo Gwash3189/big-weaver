@@ -2,23 +2,20 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { Controller, install } from '../../controller'
 import { SupportedRequestMethods } from '../../controller/execution'
 import { Facade } from '../../facade'
-import { serialize } from 'cookie'
 
 export type RequestType =
   | {
       body: { [key: string]: any }
       method: string,
-      cookies: string
+      cookies: { [key: string]: string }
     }
   | { [key: string]: any }
 
 export class RequestBuilder {
   private request: RequestType
-  private cookies: string
 
   constructor() {
     this.request = {}
-    this.cookies = ''
   }
 
   body(json: { [key: string]: any }) {
@@ -26,8 +23,12 @@ export class RequestBuilder {
     return this
   }
 
-  cookie(name: string, value: string, options: {}) {
-    this.request.cookies = [...((this.cookies.split(';') as Array<string> | undefined) || []), serialize(name, value, options)]
+  cookie(name: string, value: string) {
+    this.request.cookies = {
+      ...this.request.cookies,
+      [name]: value
+    }
+
     return this
   }
 
@@ -36,8 +37,8 @@ export class RequestBuilder {
     return this
   }
 
-  build() {
-    return this.request
+  build<T>() {
+    return this.request as T
   }
 }
 
@@ -45,7 +46,10 @@ export type ResponseType =
   | {
       json: { [key: string]: any }
       status: number
-      ended: boolean
+      ended: boolean,
+      headers: {}
+      getHeader: (name: string) => any,
+      setHeader: (name: string, value: string) => any,
     }
   | { [key: string]: any }
 
@@ -54,11 +58,35 @@ export class ResponseBuilder extends Facade {
 
   constructor() {
     super()
-    this.response = {}
+    const that = this
+
+    this.response = {
+      getHeader(name: string) {
+        return that.response.headers[name]
+      },
+      setHeader(name: string, value: string) {
+        return that.response.headers[name] = value
+      },
+      headers: {}
+    }
+  }
+
+  static as(response: any) {
+    return response as ResponseType
   }
 
   json(json: { [key: string]: any }) {
     this.response.json = json
+    return this
+  }
+
+  setHeader(name: string, value: string) {
+    this.response.headers[name] = value
+    return this
+  }
+
+  getHeader(name: string) {
+    this.response.headers[name]
     return this
   }
 
@@ -71,8 +99,8 @@ export class ResponseBuilder extends Facade {
     this.response.ended = true
   }
 
-  build() {
-    return this.response
+  build<T>() {
+    return this.response as T
   }
 }
 
