@@ -1,5 +1,5 @@
 {
-  "version": "0.0.2-2",
+  "version": "0.0.2-3",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -25,7 +25,8 @@
     "lint:fix": "tsdx lint src/**/*.ts test/**/*.spec.ts --fix",
     "prepare": "npm run build",
     "size": "size-limit",
-    "analyze": "size-limit --why"
+    "analyze": "size-limit --why",
+    "dist": "cp-rf package.json dist && cd dist && npm publish --"
   },
   "prettier": {
     "printWidth": 160,
