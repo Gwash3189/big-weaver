@@ -13,7 +13,7 @@ type MinimalNewUserBody = {
 type MinimalNewUserBodyWithHashedPassword = {
   email: string
   password: string
-  confirmationPassword: string,
+  confirmationPassword: string
   hashedPassword: string
 }
 
@@ -25,10 +25,6 @@ export type MinimalUser = {
 }
 
 export abstract class UserController<U> extends Controller {
-  constructor() {
-    super()
-  }
-
   /**
    * Used in creating a new user at signup. Unauthenticated.
    */
@@ -50,7 +46,7 @@ export abstract class UserController<U> extends Controller {
 
       Logger.debug({ message: 'user created' })
       this.afterUserCreation(req, res, user)
-      Auth.setJwt({ user: { id: user.id }})
+      Auth.setJwt({ user: { id: user.id } })
       return res.json({ data: { user } })
     } else {
       Logger.debug({ message: 'users passwords do not match' })
@@ -58,7 +54,7 @@ export abstract class UserController<U> extends Controller {
     }
   }
 
-  protected abstract createUser(user: MinimalNewUserBodyWithHashedPassword & { [key: string]: string }): Promise<(U & { id: string | number })>
+  protected abstract createUser(user: MinimalNewUserBodyWithHashedPassword & { [key: string]: string }): Promise<U & { id: string | number }>
   protected beforeUserCreation(_req: NextApiRequest, _res: NextApiResponse): void {}
   protected afterUserCreation(_req: NextApiRequest, _res: NextApiResponse, _user: U): void {}
 
