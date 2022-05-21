@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Cookie } from '../src'
+import { Cookie } from '../src/cookie'
 import { RequestKey, ResponseKey } from '../src/network-jar'
 import { NetworkJar } from '../src/network-jar'
 import { RequestBuilder, ResponseBuilder } from '../src/test'

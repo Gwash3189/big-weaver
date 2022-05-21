@@ -1,4 +1,6 @@
-import { Auth, Cookie, Logger } from '../../src'
+import { Auth } from '../../src/auth'
+import { Cookie } from '../../src/cookie'
+import { Logger } from '../../src/logger'
 import * as JWT from 'jsonwebtoken'
 import { Hash } from '../../src/hash'
 

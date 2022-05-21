@@ -22,7 +22,7 @@
     "prepare": "npm run build",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "dist": "cp -rf package.json dist && cd dist && npm publish --"
+    "dist": "npm run lint && npm run test && npm run build && cp -rf package.json dist && cd dist && npm publish --"
   },
   "prettier": {
     "printWidth": 160,

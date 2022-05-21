@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Controller, install } from '../../src'
+import { Controller, install } from '../../src/controller'
 
 let controllerSpy: jest.Mock
 

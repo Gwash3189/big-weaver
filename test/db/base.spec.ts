@@ -1,5 +1,5 @@
 import { Prisma, PrismaClient, User } from '@prisma/client'
-import { BaseRepository } from '../../src'
+import { BaseRepository } from '../../src/db'
 import { repository } from '../../src/db'
 import { Repositorys } from '../../src/db/repository/base'
 

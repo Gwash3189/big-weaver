@@ -34,13 +34,14 @@ export abstract class UserController<U> extends Controller {
     if (newUserBody.password === newUserBody.confirmationPassword) {
       const hashedPassword = await Auth.hash(newUserBody.password)
       this.beforeUserCreation(req, res)
+
       const user = await this.createUser({
         ...newUserBody,
         hashedPassword: hashedPassword,
       })
 
       if (user === null) {
-        Logger.error({ message: 'createUser in ${this.constructor.name} returned null. Returning 500.' })
+        Logger.error({ message: `createUser in ${this.constructor.name} returned null. Returning 500.` })
         res.status(500).json({ errors: ['user creation failed'] })
       }
 

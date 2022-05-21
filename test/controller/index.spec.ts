@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Controller } from '../../src'
+import { Controller } from '../../src/controller'
 import { MiddlewareProvider } from '../../src/controller/middleware'
 
 describe('Controller', () => {
