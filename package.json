@@ -3,11 +3,6 @@
   "license": "MIT",
   "main": "index.js",
   "typings": "index.d.ts",
-  "files": [
-    ".",
-    "./*",
-    "./**/*"
-  ],
   "engines": {
     "node": ">=10"
   },
