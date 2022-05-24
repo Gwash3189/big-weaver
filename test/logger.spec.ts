@@ -21,6 +21,10 @@ import pino from 'pino'
 import { Logger } from '../src/logger'
 
 describe('Logger', () => {
+  it('sets the logging level correctly in a test environment', () => {
+    expect(((pino as unknown) as jest.Mock).mock.calls[0][0].level).toEqual('silent')
+  })
+
   describe('#new', () => {
     beforeAll(() => {
       Logger.configure({})
@@ -53,6 +57,7 @@ describe('Logger', () => {
 
   describe('#configure', () => {
     const options = {}
+
     beforeEach(() => {
       Logger.configure(options)
     })
@@ -61,6 +66,7 @@ describe('Logger', () => {
       expect(pino).toHaveBeenLastCalledWith(options)
     })
   })
+
   ;['debug', 'warn', 'error', 'fatal', 'trace'].forEach(method => {
     describe(`when ${method} is called`, () => {
       it('passes the json object to pino', () => {
@@ -68,17 +74,6 @@ describe('Logger', () => {
         ;(Logger as any)[method](loggingObject)
         expect((pinoMock as any)[method]).toHaveBeenCalledWith(loggingObject)
       })
-    })
-  })
-
-  describe('#configure', () => {
-    const options = {}
-    beforeEach(() => {
-      Logger.configure(options)
-    })
-
-    it('creates a new logger with the provided options', () => {
-      expect(pino).toHaveBeenLastCalledWith(options)
     })
   })
 })

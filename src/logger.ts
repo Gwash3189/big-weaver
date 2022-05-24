@@ -3,12 +3,35 @@ import pino, { LoggerOptions } from 'pino'
 
 type MinimalLoggingProps = {
   message: string
-} & { [key: string]: any }
+} & Record<string, any>
 
-const value = process.env.LOGGING_LEVEL || (process.env.NODE_ENV === 'production' && 'warn') || (process.env.NODE_ENV === 'test' && 'silent') || 'trace'
+
+
+function getLoggingLevel() {
+  let level
+
+  if (process.env.NODE_ENV === 'production') {
+    level = 'warn'
+  }
+
+  if (process.env.NODE_ENV === 'test') {
+    level = 'silent'
+  }
+
+  if (process.env.NODE_ENV === 'development' || !process.env.NODE_ENV) {
+    level = 'trace'
+  }
+
+  if (process.env.LOGGING_LEVEL) {
+    level = process.env.LOGGING_LEVEL
+  }
+
+  return level
+}
+
 let logger = pino({
   redact: ['email', 'password', 'hashedPassword', 'name', 'lastName', 'firstName'],
-  level: value,
+  level: getLoggingLevel()
 })
 
 export class Logger extends Facade {
