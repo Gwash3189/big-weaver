@@ -7,7 +7,8 @@ export type RequestType =
   | {
       body: { [key: string]: any }
       method: string,
-      cookies: { [key: string]: string }
+      cookies: { [key: string]: string },
+      query: { [key: string]: any }
     }
   | { [key: string]: any }
 
@@ -18,8 +19,21 @@ export class RequestBuilder {
     this.request = {}
   }
 
+  query(json: { [key: string]: any }) {
+    this.request.query = {
+      ...this.request.query,
+      ...json
+    }
+
+    return this
+  }
+
   body(json: { [key: string]: any }) {
-    this.request.body = json
+    this.request.body = {
+      ...this.request.body,
+      ...json
+    }
+
     return this
   }
 
