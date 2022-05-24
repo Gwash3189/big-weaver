@@ -5,21 +5,25 @@ import { Facade } from '../../facade'
 
 export type RequestType =
   | {
-      body: { [key: string]: any }
+      body: Record<string, any>
       method: string,
-      cookies: { [key: string]: string },
-      query: { [key: string]: any }
+      cookies: Record<string, string>,
+      query: Record<string, any>
     }
-  | { [key: string]: any }
+  | Record<string, any>
 
 export class RequestBuilder {
   private request: RequestType
 
   constructor() {
-    this.request = {}
+    this.request = {
+      body: {},
+      cookies: {},
+      query: {}
+    }
   }
 
-  query(json: { [key: string]: any }) {
+  query(json: Record<string, any>) {
     this.request.query = {
       ...this.request.query,
       ...json
@@ -28,7 +32,7 @@ export class RequestBuilder {
     return this
   }
 
-  body(json: { [key: string]: any }) {
+  body(json: Record<string, any>) {
     this.request.body = {
       ...this.request.body,
       ...json
@@ -58,14 +62,14 @@ export class RequestBuilder {
 
 export type ResponseType =
   | {
-      json: { [key: string]: any }
+      json: Record<string, any>
       status: number
       ended: boolean,
       headers: {}
       getHeader: (name: string) => any,
       setHeader: (name: string, value: string) => any,
     }
-  | { [key: string]: any }
+  | Record<string, any>
 
 export class ResponseBuilder extends Facade {
   private response: ResponseType
@@ -89,7 +93,7 @@ export class ResponseBuilder extends Facade {
     return response as ResponseType
   }
 
-  json(json: { [key: string]: any }) {
+  json(json: Record<string, any>) {
     this.response.json = json
     return this
   }
