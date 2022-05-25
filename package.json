@@ -53,11 +53,12 @@
     "pino": "^7.10.0"
   },
   "peerDependencies": {
-    "next": "12.1.x",
-    "@prisma/client": "3.7.0"
+    "@prisma/client": "3.7.0",
+    "next": "12.1.x"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "7.0.5",
+    "@tsconfig/node16": "^1.0.2",
     "@types/bcrypt": "^5.0.0",
     "next": "12.1.x",
     "np": "7.6.0",
