@@ -36,7 +36,10 @@ let logger = pino({
 
 export class Logger extends Facade {
   static configure(options: LoggerOptions) {
-    logger = pino(options)
+    logger = pino({
+      level: getLoggingLevel(),
+      ...options
+    })
   }
 
   static debug(params: MinimalLoggingProps) {
