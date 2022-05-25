@@ -56,7 +56,9 @@ describe('Logger', () => {
   })
 
   describe('#configure', () => {
-    const options = {}
+    const options = {
+      level: 'silent'
+    }
 
     beforeEach(() => {
       Logger.configure(options)
