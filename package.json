@@ -12,7 +12,7 @@
     "server": "npm run start",
     "update": "npm run bootstrap",
     "start": "tsdx watch",
-    "build": "tsdx build --target node",
+    "build": "rm -rf ./dist && tsc",
     "test": "tsdx test",
     "test:integration": "docker compose up -d && sleep 4 && prisma migrate reset -f && INTEGRATION=true tsdx test && docker compose down",
     "test:watch": "tsdx test --watch",
