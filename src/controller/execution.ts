@@ -63,24 +63,13 @@ export function install(controller: constructor<Controller>) {
     startCycleTimer()
     registerRequestAndResponseObjects(req, res)
     const instance = getControllerInstance(controller)
-    switch (req.method) {
-      case 'GET': // eslint-disable-line no-fallthrough
-        return await executeRequest(req.method.toLowerCase(), instance, req, res)
-      case 'PUT': // eslint-disable-line no-fallthrough
-        return await executeRequest(req.method.toLowerCase(), instance, req, res)
-      case 'DELETE': // eslint-disable-line no-fallthrough
-        return await executeRequest(req.method.toLowerCase(), instance, req, res)
-      case 'POST': // eslint-disable-line no-fallthrough
-        return await executeRequest(req.method.toLowerCase(), instance, req, res)
-      case 'PATCH': // eslint-disable-line no-fallthrough
-        return await executeRequest(req.method.toLowerCase(), instance, req, res)
-      case 'HEAD': // eslint-disable-line no-fallthrough
-        return await executeRequest(req.method.toLowerCase(), instance, req, res)
-      case 'OPTIONS': // eslint-disable-line no-fallthrough
-        return await executeRequest(req.method.toLowerCase(), instance, req, res)
-      default:
-        // eslint-disable-line no-fallthrough
-        return res.status(404).end()
+    if (req.method) {
+      const method = req.method.toLowerCase() as Lowercase<SupportedRequestMethods>
+      return await instance.handle(method, req, res)
     }
+
+    // if the request has no method, which would be weird.
+    // then return a 404 and end the response.
+    return res.status(404).end()
   }
 }
