@@ -41,7 +41,8 @@ export class Controller extends Facade {
   async handle(method: Lowercase<SupportedRequestMethods>, request: NextApiRequest, response: NextApiResponse) {
     try {
       if (this[method]) {
-       return await this[method](request, response)
+        // prettier-ignore
+        return await this[method](request, response)
       }
 
       Logger.warn({ message: `${this.constructor.name} does not support ${method}` })
