@@ -29,18 +29,18 @@ describe('Controller', () => {
     let regularError: Error
     let request: NextApiRequest
     let response: NextApiResponse
-    class CustomError extends Error{}
-    class AnotherError extends Error{}
-     class RescueController extends Controller {
+    class CustomError extends Error {}
+    class AnotherError extends Error {}
+    class RescueController extends Controller {
       constructor() {
         super()
 
-        mock = jest.fn((err) => {
+        mock = jest.fn(err => {
           error = err
         })
 
         this.rescue(CustomError, mock)
-        this.rescue(Error, (err) => {
+        this.rescue(Error, err => {
           regularError = err
         })
       }
