@@ -81,8 +81,7 @@ export class ResponseBuilder extends Facade {
 
     this.response = {
       getHeader(name: string) {
-        that.response.headers[name]
-        return that.response
+        return that.response.headers[name]
       },
       setHeader(name: string, value: string) {
         that.response.headers[name] = value
