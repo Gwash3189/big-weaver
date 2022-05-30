@@ -34,7 +34,7 @@ export class Controller extends Facade {
   }
 
   protected rescue<E>(exceptionClass: constructor<E>, func: (error: E, request: NextApiRequest, response: NextApiResponse) => any) {
-    this.rescueMap.set(exceptionClass.name, func)
+    this.rescueMap[exceptionClass.name] = func
     return this
   }
 

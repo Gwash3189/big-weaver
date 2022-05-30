@@ -63,9 +63,10 @@ export class RequestBuilder {
 export type ResponseType =
   | {
       json: Record<string, any>
-      status: number
+      statusCode: number,
       ended: boolean,
-      headers: {}
+      headers: Record<string, any>,
+      status: (status: number) => any,
       getHeader: (name: string) => any,
       setHeader: (name: string, value: string) => any,
     }
@@ -80,12 +81,23 @@ export class ResponseBuilder extends Facade {
 
     this.response = {
       getHeader(name: string) {
-        return that.response.headers[name]
+        that.response.headers[name]
+        return that.response
       },
       setHeader(name: string, value: string) {
-        return that.response.headers[name] = value
+        that.response.headers[name] = value
+        return that.response
       },
-      headers: {}
+      status(status: number) {
+        that.response.statusCode = status
+        return that.response
+      },
+      end() {
+        that.response.ended = true
+        return
+      },
+      headers: {},
+      statusCode: 0
     }
   }
 

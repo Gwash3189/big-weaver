@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Controller } from '../../src/controller'
+import { RequestBuilder, ResponseBuilder } from '../../src/test'
 import { MiddlewareProvider } from '../../src/controller/middleware'
 
 describe('Controller', () => {
@@ -19,6 +20,84 @@ describe('Controller', () => {
       ;(new Controller() as any)[method](req, res)
       expect(res.redirect).toHaveBeenCalledWith('/404')
       ;(res.redirect as jest.Mock).mockClear()
+    })
+  })
+
+  describe('#rescue', () => {
+    let instance: Controller, mock: jest.Mock
+    let error: CustomError
+    let regularError: Error
+    let request: NextApiRequest
+    let response: NextApiResponse
+    class CustomError extends Error{}
+    class AnotherError extends Error{}
+     class RescueController extends Controller {
+      constructor() {
+        super()
+
+        mock = jest.fn((err) => {
+          error = err
+        })
+
+        this.rescue(CustomError, mock)
+        this.rescue(Error, (err) => {
+          regularError = err
+        })
+      }
+
+      get() {
+        throw new CustomError()
+      }
+
+      post() {
+        throw new Error()
+      }
+
+      put() {
+        throw new AnotherError()
+      }
+    }
+
+    beforeEach(() => {
+      request = new RequestBuilder().build()
+      response = new ResponseBuilder().build()
+      instance = new RescueController()
+      instance.handle('get', request, response)
+    })
+
+    it('catches the thrown error', () => {
+      expect(error).toBeInstanceOf(CustomError)
+    })
+
+    it('calls the error handler with the correct arguments', () => {
+      expect(mock).toHaveBeenCalledWith(expect.any(CustomError), request, response)
+    })
+
+    describe('when a different type of error is thrown', () => {
+      beforeEach(() => {
+        request = new RequestBuilder().build()
+        response = new ResponseBuilder().build()
+        instance = new RescueController()
+        instance.handle('post', request, response)
+      })
+
+      it('calls the correct handler based upon the type of error thrown', () => {
+        expect(regularError).toBeInstanceOf(Error)
+        expect(mock).toHaveBeenCalledTimes(0)
+      })
+    })
+
+    describe('when there is no handler for the thrown error', () => {
+      beforeEach(() => {
+        request = new RequestBuilder().build()
+        response = new ResponseBuilder().build()
+        instance = new RescueController()
+        instance.handle('put', request, response)
+      })
+
+      it('calls the correct handler based upon the type of error thrown', () => {
+        expect(response.statusCode).toEqual(500)
+      })
     })
   })
 
