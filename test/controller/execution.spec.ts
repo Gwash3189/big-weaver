@@ -70,10 +70,7 @@ describe('#install', () => {
 
     describe('when the provided controller has a supported method', () => {
       ;['GET', 'PUT', 'DELETE', 'POST', 'PATCH', 'HEAD', 'OPTIONS'].forEach(method => {
-        describe('logs when the request starts and finishes processing', () => {
-
-
-        })
+        describe('logs when the request starts and finishes processing', () => {})
 
         describe(`when there is a ${method} request`, () => {
           beforeEach(() => {
@@ -102,7 +99,7 @@ describe('#install', () => {
           it('calls the logger when processing starts', () => {
             expect(Logger.debug).toHaveBeenCalledWith({
               message: 'Request received',
-              startTime: expect.any(Number)
+              startTime: expect.any(Number),
             })
           })
 
@@ -111,14 +108,14 @@ describe('#install', () => {
               message: 'Processing complete',
               startTime: expect.any(Number),
               endTime: expect.any(Number),
-              difference: expect.any(String)
+              difference: expect.any(String),
             })
           })
 
           it('calls the logger when when the controller instance is found', () => {
             expect(Logger.debug).toHaveBeenCalledWith({
               message: 'Controller instance resolved',
-              controller: expect.any(String)
+              controller: expect.any(String),
             })
           })
         })
