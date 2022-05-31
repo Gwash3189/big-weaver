@@ -34,7 +34,7 @@ function registerRequestAndResponseObjects(req: NextApiRequest, res: NextApiResp
 
 function startCycleTimer() {
   startTime = Date.now()
-  Logger.debug({ message: 'Request Received', startTime })
+  Logger.debug({ message: 'Request received', startTime })
 }
 
 function stopCycleTimer() {
@@ -49,9 +49,9 @@ function getControllerInstance(controller: Function) {
   return instance
 }
 
-export async function executeRequest(method: string, instance: Controller, req: NextApiRequest, res: NextApiResponse) {
+export async function executeRequest(method: Lowercase<SupportedRequestMethods>, instance: Controller, req: NextApiRequest, res: NextApiResponse) {
   MiddlewareExecutor.before(method, instance, req, res)
-  const returnValue = await Reflect.apply(Reflect.get(instance, method), instance, [req, res])
+  const returnValue = instance.handle(method, req, res)
   MiddlewareExecutor.after(method, instance, req, res)
   stopCycleTimer()
   return returnValue
@@ -60,12 +60,12 @@ export async function executeRequest(method: string, instance: Controller, req: 
 export function install(controller: constructor<Controller>) {
   ControllerJar.set(controller.name, new controller())
   return async function handler(req: NextApiRequest, res: NextApiResponse) {
-    startCycleTimer()
-    registerRequestAndResponseObjects(req, res)
-    const instance = getControllerInstance(controller)
     if (req.method) {
+      startCycleTimer()
+      registerRequestAndResponseObjects(req, res)
+      const instance = getControllerInstance(controller)
       const method = req.method.toLowerCase() as Lowercase<SupportedRequestMethods>
-      return await instance.handle(method, req, res)
+      return await executeRequest(method, instance, req, res)
     }
 
     // if the request has no method, which would be weird.

@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { Facade } from '../facade'
 import { Controller } from './controller'
 import { SupportedRequestMethods } from './execution'
 import { Middleware as IMiddleware } from './types'
@@ -69,8 +70,10 @@ export class MiddlewareProvider {
   }
 }
 
-export class MiddlewareExecutor {
-  constructor(protected middleware: Middleware, private method: string) {}
+export class MiddlewareExecutor extends Facade {
+  constructor(protected middleware: Middleware, private method: string) {
+    super()
+  }
 
   static before(method: string, controller: Controller, req: NextApiRequest, res: NextApiResponse) {
     let shouldStop = false
