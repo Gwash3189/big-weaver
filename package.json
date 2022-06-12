@@ -22,6 +22,7 @@
     "prepare": "npm run build",
     "size": "size-limit",
     "analyze": "size-limit --why",
+    "check": "npm run lint && npm run build && npm run test",
     "dist": "npm run lint && npm run test && npm run build && cp -rf package.json dist && cd dist && npm publish --"
   },
   "prettier": {
