@@ -38,7 +38,7 @@ export class Controller extends Facade {
     return this
   }
 
-  async handle(method: Lowercase<SupportedRequestMethods>, request: NextApiRequest, response: NextApiResponse) {
+  async handle(method: SupportedRequestMethods, request: NextApiRequest, response: NextApiResponse) {
     try {
       if (this[method]) {
         // prettier-ignore
