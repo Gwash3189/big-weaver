@@ -69,7 +69,7 @@ export function install(controller: constructor<Controller>) {
     }
 
     // if the request has no method, which would be weird.
-    // then return a 404 and end the response.
+    // then we will return a 404 and end the response.
     return res.status(404).end()
   }
 }
