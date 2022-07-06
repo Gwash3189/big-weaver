@@ -3,12 +3,12 @@ import { Controller } from '../controller'
 import { ConfigurationController } from './configuration'
 
 export class HealthController extends Controller {
-  static checks = [
-    ConfigurationController.configured()
-  ]
+  static checks() {
+    return [ConfigurationController.configured]
+  }
 
   get(_request: NextApiRequest, res: NextApiResponse) {
-    const alive = HealthController.checks.every(result => result)
+    const alive = HealthController.checks().every(check => check())
 
     res.json({ alive })
   }
