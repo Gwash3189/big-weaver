@@ -41,7 +41,7 @@ export abstract class AuthController<U> extends Controller {
 
     Logger.debug({ message: 'user found and passwords match' })
 
-    Auth.setJwt({
+    await Auth.setJwt({
       user: {
         id: user.id,
       },
