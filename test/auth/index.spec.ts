@@ -48,7 +48,6 @@ describe('Auth', () => {
       let result: any
 
       beforeEach(async () => {
-        Auth.configure('secret')
         Cookie.mock(
           'get',
           jest.fn(() => undefined)
@@ -69,7 +68,6 @@ describe('Auth', () => {
       let result: any
 
       beforeEach(async () => {
-        Auth.configure('secret')
         Cookie.mock(
           'get',
           jest.fn(() => JWT.sign({ user: { id: 1 } }, 'secret'))
@@ -93,7 +91,6 @@ describe('Auth', () => {
 
   describe('#setJwt', () => {
     beforeEach(() => {
-      Auth.configure('secret')
       Cookie.mock('set', jest.fn())
     })
 
@@ -168,7 +165,6 @@ describe('Auth', () => {
       let result: string
 
       beforeEach(async () => {
-        Auth.configure('secret')
         result = await Auth.getJwt(jwtToken)
       })
 
