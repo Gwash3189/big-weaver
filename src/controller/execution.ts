@@ -6,6 +6,7 @@ import { MiddlewareExecutor } from './middleware'
 import { Logger } from '../logger'
 import { constructor } from '../types'
 import { NetworkJar } from '../network-jar'
+import { v4 as UUID } from 'uuid'
 
 export type SupportedRequestMethods = 'get' | 'put' | 'delete' | 'post' | 'patch' | 'head' | 'options'
 
@@ -29,9 +30,9 @@ function stopCycleTimer() {
   Logger.debug({ message: 'Processing complete', startTime, endTime, difference: `${difference}ms` })
 }
 
-function getControllerInstance(controller: Function) {
-  const instance = ControllerJar.get<Controller>(controller.name)
-  Logger.debug({ message: 'Controller instance resolved', controller: instance.constructor.name })
+function getControllerInstance(controllerName: string) {
+  const instance = ControllerJar.get<Controller>(controllerName)
+  Logger.debug({ message: 'Controller instance resolved', controller: instance.constructor.name, fullControllerName: controllerName })
   return instance
 }
 
@@ -44,12 +45,13 @@ export async function executeRequest(method: SupportedRequestMethods, instance: 
 }
 
 export function install(controller: constructor<Controller>) {
-  ControllerJar.set(controller.name, new controller())
+  const controllerName = `${controller.name}-${UUID()}`
+  ControllerJar.set(controllerName, new controller())
   return async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method) {
       startCycleTimer()
       registerRequestAndResponseObjects(req, res)
-      const instance = getControllerInstance(controller)
+      const instance = getControllerInstance(controllerName)
       const method = req.method.toLowerCase() as SupportedRequestMethods
       return await executeRequest(method, instance, req, res)
     }

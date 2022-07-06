@@ -116,6 +116,7 @@ describe('#install', () => {
             expect(Logger.debug).toHaveBeenCalledWith({
               message: 'Controller instance resolved',
               controller: expect.any(String),
+              fullControllerName: expect.any(String),
             })
           })
         })
