@@ -57,8 +57,10 @@ export class Controller extends Facade {
       }
 
       Logger.error({ message: `unhandled error thrown by ${this.constructor.name} controller.` })
-      Logger.error({ message: `to handle this error, use this.rescue(${error.constructor.name}, ...)` })
+      Logger.error({ message: `to handle this error, use this.rescue(${error.constructor.name}, (error, req, res) => ...)` })
       Logger.error({ message: `sending 500 and ending the response` })
+      Logger.error({ message: 'Error message', errorMessage: error.message })
+      Logger.error({ message: 'Error name', errorName: error.name })
 
       return response.status(500).end()
     }
