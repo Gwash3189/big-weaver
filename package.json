@@ -23,7 +23,7 @@
     "size": "size-limit",
     "analyze": "size-limit --why",
     "check": "npm run lint && npm run build && npm run test",
-    "dist": "npm run lint && npm run test && npm run build && cd dist && npm publish --"
+    "dist": "npm run lint && npm run test:integration && npm run build && cd dist && npm publish --"
   },
   "prettier": {
     "printWidth": 160,
