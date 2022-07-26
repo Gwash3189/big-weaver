@@ -44,7 +44,7 @@ export abstract class AuthController<U> extends Controller {
     await Auth.setJwt({
       user: {
         id: user.id,
-      },
+      }
     })
 
     return res.json({ data: { user } })

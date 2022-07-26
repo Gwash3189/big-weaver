@@ -29,7 +29,11 @@ export class Auth extends Facade {
     })
   }
 
-  static async setJwt(args: JWTToken, cookieOptions: CookieSerializeOptions = {}, jwtOptions = {}) {
+  static async setJwt(
+    args: JWTToken,
+    cookieOptions: CookieSerializeOptions = {},
+    jwtOptions: JWT.SignOptions = { expiresIn: '1h' }
+  ) {
     Cookie.set(this.jwtCookie, await Auth.getJwt(args, jwtOptions), { httpOnly: true, domain: '/', ...cookieOptions })
   }
 
@@ -50,14 +54,17 @@ export class Auth extends Facade {
     }
   }
 
-  static async refresh(options: JWT.VerifyOptions = {}) {
-    const result = (await Auth.verify(options)) as JWTToken | false
+  static async refresh(
+    verifyOptions: JWT.VerifyOptions = {},
+    signOptions: JWT.SignOptions = {}
+  ) {
+    const result = (await Auth.verify(verifyOptions)) as JWTToken | false
 
     if (result !== false) {
       delete result.exp
       delete result.iat
 
-      await Auth.setJwt(result, {}, options)
+      await Auth.setJwt(result, {}, signOptions)
     }
 
     return false
