@@ -66,12 +66,12 @@ describe('AuthController', () => {
       })
     })
 
-    describe('when the user isn\'t found', () => {
+    describe("when the user isn't found", () => {
       let request: RequestBuilder
 
       class NotFoundController extends AuthController {
         protected getUser(_email: string): Promise<{ name: string } & { id: string | number; email: string; hashedPassword: string }> {
-          return Promise.resolve(null as unknown as any)
+          return Promise.resolve((null as unknown) as any)
         }
       }
 

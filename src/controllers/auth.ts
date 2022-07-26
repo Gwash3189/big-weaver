@@ -48,9 +48,9 @@ export abstract class AuthController<U> extends Controller {
   protected abstract getUser(email: string): Promise<(U & MinimalUser) | null>
   protected abstract onUserNotFound(req: NextApiRequest, res: NextApiResponse): Promise<any>
   protected abstract onPasswordsDontMatch(req: NextApiRequest, res: NextApiResponse): Promise<any>
-  protected abstract onSuccess(req: NextApiRequest, res: NextApiResponse, user: (U & MinimalUser)): Promise<any>
+  protected abstract onSuccess(req: NextApiRequest, res: NextApiResponse, user: U & MinimalUser): Promise<any>
 
-  async setJwt(user: (U & MinimalUser)) {
+  async setJwt(user: U & MinimalUser) {
     return await Auth.setJwt({
       user: {
         id: user.id,
