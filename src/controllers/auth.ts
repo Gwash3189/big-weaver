@@ -27,7 +27,7 @@ export abstract class AuthController<U> extends Controller {
       Logger.debug({
         message: 'user not found',
       })
-      return this.userNotFound(res)
+      return await this.onUserNotFound(req, res)
     }
 
     const result = await Auth.attempt(body.password, user.hashedPassword)
@@ -36,25 +36,25 @@ export abstract class AuthController<U> extends Controller {
       Logger.debug({
         message: 'provided password does not match stored hashed password',
       })
-      return this.userNotFound(res)
+      return await this.onPasswordsDontMatch(req, res)
     }
 
     Logger.debug({ message: 'user found and passwords match' })
 
-    await Auth.setJwt({
-      user: {
-        id: user.id,
-      },
-    })
-
-    return res.json({ data: { user } })
+    await this.setJwt(user)
+    return await this.onSuccess(req, res, user)
   }
 
   protected abstract getUser(email: string): Promise<(U & MinimalUser) | null>
+  protected abstract onUserNotFound(req: NextApiRequest, res: NextApiResponse): Promise<any>
+  protected abstract onPasswordsDontMatch(req: NextApiRequest, res: NextApiResponse): Promise<any>
+  protected abstract onSuccess(req: NextApiRequest, res: NextApiResponse, user: (U & MinimalUser)): Promise<any>
 
-  private userNotFound(res: NextApiResponse) {
-    return res.status(404).json({
-      errors: ['user not found'],
+  async setJwt(user: (U & MinimalUser)) {
+    return await Auth.setJwt({
+      user: {
+        id: user.id,
+      },
     })
   }
 }
