@@ -1,5 +1,5 @@
 {
-  "version": "0.0.10-10",
+  "version": "0.0.10-8",
   "license": "MIT",
   "main": "index.js",
   "typings": "index.d.ts",
@@ -56,14 +56,14 @@
   },
   "peerDependencies": {
     "@prisma/client": "3.7.0",
-    "next": "12.1.x"
+    "next": "12.2.x"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "7.0.5",
     "@tsconfig/node16": "^1.0.2",
     "@types/bcrypt": "^5.0.0",
     "@types/uuid": "^8.3.4",
-    "next": "12.1.x",
+    "next": "12.2.x",
     "np": "7.6.0",
     "pino-pretty": "^7.6.1",
     "prisma": "^3.14.0",
