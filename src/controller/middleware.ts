@@ -75,7 +75,7 @@ export class MiddlewareExecutor extends Facade {
     super()
   }
 
-  static before(method: string, controller: Controller, req: NextApiRequest, res: NextApiResponse) {
+  static async before(method: string, controller: Controller, req: NextApiRequest, res: NextApiResponse): Promise<boolean> {
     let shouldStop = false
 
     const stop = () => {
@@ -88,14 +88,16 @@ export class MiddlewareExecutor extends Facade {
 
     for (let index = 0; index < middleware.length; index++) {
       const executor = middleware[index]
-      executor.execute(req, res, stop)
+      await executor.execute(req, res, stop)
       if (shouldStop) {
         break
       }
     }
+
+    return shouldStop
   }
 
-  static after(method: string, controller: Controller, req: NextApiRequest, res: NextApiResponse) {
+  static async after(method: string, controller: Controller, req: NextApiRequest, res: NextApiResponse): Promise<boolean> {
     let shouldStop = false
 
     const stop = () => {
@@ -108,11 +110,13 @@ export class MiddlewareExecutor extends Facade {
 
     for (let index = 0; index < middleware.length; index++) {
       const executor = middleware[index]
-      executor.execute(req, res, stop)
+      await executor.execute(req, res, stop)
       if (shouldStop) {
         break
       }
     }
+
+    return shouldStop
   }
 
   static create(middleware: Middleware, method: string) {
@@ -123,7 +127,7 @@ export class MiddlewareExecutor extends Facade {
     return this.middleware.shouldExecute(this.method)
   }
 
-  execute(req: NextApiRequest, res: NextApiResponse, stop: () => void) {
-    this.middleware.handle(req, res, stop)
+  async execute(req: NextApiRequest, res: NextApiResponse, stop: () => void) {
+    await this.middleware.handle(req, res, stop)
   }
 }

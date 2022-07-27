@@ -14,7 +14,7 @@
     "start": "tsdx watch",
     "build": "rm -rf ./dist && tsc && cp -rf package.json dist",
     "test": "tsdx test",
-    "test:integration": "docker compose up -d && sleep 4 && prisma migrate reset -f && INTEGRATION=true tsdx test && docker compose down",
+    "test:integration": "docker compose up -d && sleep 4 && prisma migrate reset -f && INTEGRATION=true npm run test:coverage && docker compose down",
     "test:watch": "tsdx test --watch",
     "test:coverage": "npx tsdx test --coverage",
     "lint": "tsdx lint src/**/*.ts test/**/*.spec.ts",
@@ -22,7 +22,7 @@
     "prepare": "npm run build",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "check": "npm run lint && npm run build && npm run test",
+    "check": "npm run lint && npm run build && npm run test:integration",
     "dist": "npm run lint && npm run test:integration && npm run build && cd dist && npm publish --"
   },
   "prettier": {

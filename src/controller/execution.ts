@@ -37,9 +37,16 @@ function getControllerInstance(controllerName: string) {
 }
 
 export async function executeRequest(method: SupportedRequestMethods, instance: Controller, req: NextApiRequest, res: NextApiResponse) {
-  MiddlewareExecutor.before(method, instance, req, res)
+  let shouldStop: boolean
+
+  shouldStop = await MiddlewareExecutor.before(method, instance, req, res)
+
+  if (shouldStop) {
+    return
+  }
+
   const returnValue = await instance.handle(method, req, res)
-  MiddlewareExecutor.after(method, instance, req, res)
+  await MiddlewareExecutor.after(method, instance, req, res)
   stopCycleTimer()
   return returnValue
 }
