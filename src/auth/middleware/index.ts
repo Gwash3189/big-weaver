@@ -4,7 +4,7 @@ import { Facade } from "../../facade"
 
 export class Protected extends Facade {
   static async middleware(_req: NextApiRequest, res: NextApiResponse, stop: () => void) {
-    const result = await Auth.verify()
+    const result = await Auth.refresh()
 
     if (result === false) {
       stop()

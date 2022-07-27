@@ -115,8 +115,7 @@ export class ResponseBuilder extends Facade {
   }
 
   getHeader(name: string) {
-    this.response.headers[name]
-    return this
+    return this.response.headers[name]
   }
 
   status(status: number) {
