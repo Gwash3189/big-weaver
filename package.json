@@ -1,5 +1,5 @@
 {
-  "version": "0.0.11",
+  "version": "0.0.12",
   "license": "MIT",
   "main": "index.js",
   "typings": "index.d.ts",
@@ -23,7 +23,7 @@
     "size": "size-limit",
     "analyze": "size-limit --why",
     "check": "npm run lint && npm run build && npm run test:integration",
-    "dist": "npm run lint && npm run test:integration && npm run build && cd dist && npm publish --"
+    "dist": "npm run lint && npm run test:integration && npm run build && cp README.md dist && cd dist && npm publish --"
   },
   "prettier": {
     "printWidth": 160,
