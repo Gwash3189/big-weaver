@@ -23,7 +23,7 @@ describe('Protected', () => {
   describe('when then provided JWT is valid', () => {
     beforeEach(async () => {
       getSpy = jest.fn()
-      const jwt = await Auth.getJwt({
+      const jwt = await Auth.signJwt({
         user: {
           id: '123'
         }

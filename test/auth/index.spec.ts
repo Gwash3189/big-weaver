@@ -154,7 +154,7 @@ describe('Auth', () => {
     describe('when the auth service is not configured', () => {
       it('returns an error', async () => {
         try {
-          await Auth.getJwt(jwtToken)
+          await Auth.signJwt(jwtToken)
         } catch (error) {
           expect((error as any).message).toContain('JWT Secret is not set. Please call Auth.configure to set the secret')
         }
@@ -165,7 +165,7 @@ describe('Auth', () => {
       let result: string
 
       beforeEach(async () => {
-        result = await Auth.getJwt(jwtToken)
+        result = await Auth.signJwt(jwtToken)
       })
 
       it('returns a jwt', async () => {
@@ -178,7 +178,7 @@ describe('Auth', () => {
 
       it('does not return an error', async () => {
         try {
-          await Auth.getJwt(jwtToken)
+          await Auth.signJwt(jwtToken)
         } catch (error) {
           expect(error).toBeFalsy()
         }
