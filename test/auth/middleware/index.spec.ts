@@ -1,4 +1,4 @@
-import { Protected } from '../../../src/auth/middleware'
+import { CurrentJWT, Protected } from '../../../src/auth/middleware'
 import { Auth } from '../../../src/auth'
 import { Controller } from '../../../src/controller'
 import { NextApiRequest, NextApiResponse } from 'next'
@@ -34,6 +34,10 @@ describe('Protected', () => {
 
     it('calls the correct controller action', () => {
       expect(getSpy).toHaveBeenCalled()
+    })
+
+    it('puts the value into the CurrentJWT Jar', () => {
+      expect(CurrentJWT.get()).toEqual(expect.objectContaining({ user: { id: '123' }}))
     })
   })
 

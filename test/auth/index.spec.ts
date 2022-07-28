@@ -148,7 +148,7 @@ describe('Auth', () => {
     })
   })
 
-  describe('#getJwt', () => {
+  describe('#signJwt', () => {
     const jwtToken = { user: 1 }
 
     describe('when the auth service is not configured', () => {

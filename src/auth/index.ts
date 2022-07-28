@@ -50,12 +50,12 @@ export class Auth extends Facade {
     }
   }
 
-  static async refresh(verifyOptions: JWT.VerifyOptions = {}, signOptions: JWT.SignOptions = {}) {
+  static async refresh(verifyOptions: JWT.VerifyOptions = {}, signOptions: JWT.SignOptions = { expiresIn: '1h' }) {
     const result = (await Auth.verify(verifyOptions)) as JWTToken | false
 
     if (result !== false) {
       await Auth.setJwt(result, {}, signOptions)
-      return true
+      return result
     }
 
     return false
