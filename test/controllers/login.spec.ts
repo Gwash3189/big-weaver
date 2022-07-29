@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Auth } from '../../src/auth'
-import { AuthController as AController } from '../../src/controllers/auth'
+import { LoginController as LController } from '../../src/controllers/login'
 import { post, RequestBuilder } from '../../src/test'
 
-describe('AuthController', () => {
+describe('LoginController', () => {
   type User = { name: string }
   let onUserNotFoundSpy: jest.Mock, onPasswordsDontMatchSpy: jest.Mock, onSuccessSpy: jest.Mock
-  class AuthController extends AController<User> {
+  class LoginController extends LController<User> {
     protected getUser(_email: string): Promise<{ name: string } & { id: string | number; email: string; hashedPassword: string }> {
       return Promise.resolve({
         id: '1',
@@ -45,7 +45,7 @@ describe('AuthController', () => {
           'attempt',
           jest.fn(() => true)
         )
-        await post(AuthController, request)
+        await post(LoginController, request)
       })
 
       it('sets the user auth cookie', () => {
@@ -69,7 +69,7 @@ describe('AuthController', () => {
     describe("when the user isn't found", () => {
       let request: RequestBuilder
 
-      class NotFoundController extends AuthController {
+      class NotFoundController extends LoginController {
         protected getUser(_email: string): Promise<{ name: string } & { id: string | number; email: string; hashedPassword: string }> {
           return Promise.resolve((null as unknown) as any)
         }
@@ -112,7 +112,7 @@ describe('AuthController', () => {
           jest.fn(() => false)
         )
 
-        await post(AuthController, request)
+        await post(LoginController, request)
       })
 
       it('does not set the user auth cookie', () => {

@@ -29,6 +29,10 @@ export class Auth extends Facade {
     })
   }
 
+  static async removeJwt() {
+    Cookie.remove(this.jwtCookie)
+  }
+
   static async setJwt(args: JWTToken, cookieOptions: CookieSerializeOptions = {}, jwtOptions: JWT.SignOptions = { expiresIn: '1h' }) {
     Cookie.set(this.jwtCookie, await Auth.signJwt(args, jwtOptions), { httpOnly: true, domain: '/', ...cookieOptions })
   }

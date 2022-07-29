@@ -15,7 +15,7 @@ type MinimalUser = {
   hashedPassword: string
 }
 
-export abstract class AuthController<U> extends Controller {
+export abstract class LoginController<U> extends Controller {
   /**
    * Creates a new user login session by setting the JWT cookie
    */
