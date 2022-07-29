@@ -54,6 +54,9 @@ export class Auth extends Facade {
     const result = (await Auth.verify(verifyOptions)) as JWTToken | false
 
     if (result !== false) {
+      delete result.exp
+      delete result.iat
+
       await Auth.setJwt(result, {}, signOptions)
       return result
     }
