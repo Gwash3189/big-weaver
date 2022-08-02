@@ -10,9 +10,9 @@ describe('UserController', () => {
   type User = { id: string; name: string; email: string; hashedPassword: string }
   let hasValidateUserArgumentsPassed: boolean
   let onUserCreationFailedMock: jest.Mock,
-      validateUserArgumentsMock: jest.Mock,
-      onUserCreationSuccessMock: jest.Mock,
-      onValidateUserArgumentsFailedMock: jest.Mock
+    validateUserArgumentsMock: jest.Mock,
+    onUserCreationSuccessMock: jest.Mock,
+    onValidateUserArgumentsFailedMock: jest.Mock
   const createdUser = {
     id: '1',
     email: 'email@email.com',
@@ -33,7 +33,11 @@ describe('UserController', () => {
       onUserCreationFailedMock(error)
     }
 
-    validateUserArguments(_req: NextApiRequest, _res: NextApiResponse<any>, _userArgument: { email: string; password: string; confirmationPassword: string; hashedPassword: string }): boolean {
+    validateUserArguments(
+      _req: NextApiRequest,
+      _res: NextApiResponse<any>,
+      _userArgument: { email: string; password: string; confirmationPassword: string; hashedPassword: string }
+    ): boolean {
       validateUserArgumentsMock()
       return hasValidateUserArgumentsPassed
     }
@@ -72,7 +76,7 @@ describe('UserController', () => {
 
       onUserCreationSuccess(_req: NextApiRequest, res: NextApiResponse<any>, user: { id: string; name: string; email: string; hashedPassword: string }): void {
         return res.json({
-          data: { user }
+          data: { user },
         })
       }
     }

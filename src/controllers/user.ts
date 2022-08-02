@@ -38,7 +38,7 @@ export abstract class UserController<U> extends Controller {
         hashedPassword: hashedPassword,
       }
 
-      if(!this.validateUserArguments(req, res, userArguments)) {
+      if (!this.validateUserArguments(req, res, userArguments)) {
         this.onValidateUserArgumentsFailed(req, res)
       }
 
@@ -52,18 +52,16 @@ export abstract class UserController<U> extends Controller {
 
         Logger.debug({ message: 'User created' })
         this.onUserCreationSuccess(req, res, user as U)
-
       } catch (error) {
         this.onUserCreationFailed(req, res, error as Error)
       }
-
     } else {
       Logger.debug({ message: 'Users passwords do not match' })
       return this.onUserCreationFailed(req, res, new Error('User passwords do not match'))
     }
   }
 
-  abstract createUser(user: MinimalNewUserBodyWithHashedPassword & { [key: string]: string }): Promise<U & { id: string | number } | null>
+  abstract createUser(user: MinimalNewUserBodyWithHashedPassword & { [key: string]: string }): Promise<(U & { id: string | number }) | null>
   abstract onUserCreationFailed(_req: NextApiRequest, res: NextApiResponse, error: Error): void
   abstract onValidateUserArgumentsFailed(_req: NextApiRequest, res: NextApiResponse): void
   abstract validateUserArguments(_req: NextApiRequest, res: NextApiResponse, userArgument: MinimalNewUserBodyWithHashedPassword): boolean

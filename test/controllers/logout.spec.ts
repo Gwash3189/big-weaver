@@ -10,9 +10,7 @@ describe('when there is a get request', () => {
     }
   }
 
-  let request: RequestBuilder,
-      response: ResponseType,
-      onSuccessSpy: jest.Mock
+  let request: RequestBuilder, response: ResponseType, onSuccessSpy: jest.Mock
 
   beforeEach(async () => {
     onSuccessSpy = jest.fn()
@@ -21,12 +19,7 @@ describe('when there is a get request', () => {
   })
 
   it('removes the JWT', () => {
-    expect(response.getHeader('Set-Cookie'))
-      .toEqual(
-        expect.arrayContaining([
-          expect.stringContaining(`${Auth.jwtCookie}=;`)
-        ])
-      )
+    expect(response.getHeader('Set-Cookie')).toEqual(expect.arrayContaining([expect.stringContaining(`${Auth.jwtCookie}=;`)]))
   })
 
   it('calls onSuccess', () => {
