@@ -8,30 +8,48 @@ const describeif = (condition: boolean) => (condition ? describe : describe.skip
 
 describe('UserController', () => {
   type User = { id: string; name: string; email: string; hashedPassword: string }
+  let hasValidateUserArgumentsPassed: boolean
+  let onUserCreationFailedMock: jest.Mock,
+      validateUserArgumentsMock: jest.Mock,
+      onUserCreationSuccessMock: jest.Mock,
+      onValidateUserArgumentsFailedMock: jest.Mock
   const createdUser = {
     id: '1',
     email: 'email@email.com',
     name: 'Adam',
     hashedPassword: '123',
   }
-  let beforeMock = jest.fn()
-  let afterMock = jest.fn()
+
   class UserController extends UController<User> {
-    protected createUser(_userDTO: unknown) {
+    createUser(_userDTO: unknown) {
       return Promise.resolve(createdUser)
     }
 
-    protected beforeUserCreation(_req: NextApiRequest, _res: NextApiResponse<any>): void {
-      beforeMock()
+    onUserCreationSuccess(_req: NextApiRequest, _res: NextApiResponse<any>, _user: { id: string; name: string; email: string; hashedPassword: string }): void {
+      onUserCreationSuccessMock()
     }
 
-    protected afterUserCreation(_req: NextApiRequest, _res: NextApiResponse<any>): void {
-      afterMock()
+    onUserCreationFailed(_req: NextApiRequest, _res: NextApiResponse<any>, error: Error): void {
+      onUserCreationFailedMock(error)
+    }
+
+    validateUserArguments(_req: NextApiRequest, _res: NextApiResponse<any>, _userArgument: { email: string; password: string; confirmationPassword: string; hashedPassword: string }): boolean {
+      validateUserArgumentsMock()
+      return hasValidateUserArgumentsPassed
+    }
+
+    onValidateUserArgumentsFailed(_req: NextApiRequest, _res: NextApiResponse<any>): void {
+      onValidateUserArgumentsFailedMock()
     }
   }
 
   beforeEach(() => {
     Auth.mock('setJwt', jest.fn())
+    hasValidateUserArgumentsPassed = true
+    onUserCreationFailedMock = jest.fn()
+    validateUserArgumentsMock = jest.fn()
+    onUserCreationSuccessMock = jest.fn()
+    onValidateUserArgumentsFailedMock = jest.fn()
   })
 
   afterEach(() => {
@@ -39,8 +57,8 @@ describe('UserController', () => {
   })
 
   describeif((process.env.INTEGRATION as any) === 'true')('integration tests', () => {
-    class UserController extends UController<User> {
-      protected async createUser(
+    class IntegrationUserController extends UserController {
+      async createUser(
         user: { email: string; password: string; confirmationPassword: string; hashedPassword: string } & { [key: string]: string }
       ): Promise<{ id: string; name: string; email: string; hashedPassword: string }> {
         return await client.user.create({
@@ -52,14 +70,13 @@ describe('UserController', () => {
         })
       }
 
-      protected beforeUserCreation(_req: NextApiRequest, _res: NextApiResponse<any>): void {
-        beforeMock()
-      }
-
-      protected afterUserCreation(_req: NextApiRequest, _res: NextApiResponse<any>): void {
-        afterMock()
+      onUserCreationSuccess(_req: NextApiRequest, res: NextApiResponse<any>, user: { id: string; name: string; email: string; hashedPassword: string }): void {
+        return res.json({
+          data: { user }
+        })
       }
     }
+
     let response: ResponseType
     let request: RequestBuilder
     let client: PrismaClient
@@ -72,7 +89,7 @@ describe('UserController', () => {
         confirmationPassword: 'thisisapassword',
       })
 
-      response = await post(UserController, request)
+      response = await post(IntegrationUserController, request)
     })
 
     afterEach(async () => {
@@ -98,43 +115,38 @@ describe('UserController', () => {
   })
 
   describe('when a post request is sent', () => {
-    let response: ResponseType
     let request: RequestBuilder
 
     describe('when the password and passwordConfirmation match', () => {
       beforeEach(async () => {
-        Auth.mock('hash', jest.fn())
         request = new RequestBuilder().body({
           email: 'email',
           password: '123',
           confirmationPassword: '123',
         })
 
-        response = await post(UserController, request)
+        await post(UserController, request)
       })
 
-      afterEach(() => {
-        Auth.reset('hash')
+      it('calls validateUserArguments', () => {
+        expect(validateUserArgumentsMock).toHaveBeenCalled()
       })
 
-      it('returns the new user', () => {
-        expect(response.json).toEqual({
-          data: {
-            user: createdUser,
-          },
+      describe('when the validation fails', () => {
+        beforeEach(async () => {
+          hasValidateUserArgumentsPassed = false
+          request = new RequestBuilder().body({
+            email: 'email',
+            password: '123',
+            confirmationPassword: '123',
+          })
+
+          await post(UserController, request)
         })
-      })
 
-      it('creates a new hashed password', () => {
-        expect(Auth.hash).toHaveBeenCalledWith('123')
-      })
-
-      it('calls the beforeUserCreation hook', () => {
-        expect(beforeMock).toHaveBeenCalled()
-      })
-
-      it('calls the afterUserCreation hook', () => {
-        expect(afterMock).toHaveBeenCalled()
+        it('runs onValidateUserArgumentsFails', () => {
+          expect(onValidateUserArgumentsFailedMock).toHaveBeenCalled()
+        })
       })
     })
 
@@ -145,17 +157,16 @@ describe('UserController', () => {
           password: '123',
           confirmationPassword: '321',
         })
-        response = await post(UserController, request)
+
+        await post(UserController, request)
       })
 
-      it('returns errors', () => {
-        expect(response.json).toEqual({
-          errors: ['unable to create user'],
-        })
+      it('runs onUserCreationFailed', () => {
+        expect(onUserCreationFailedMock).toHaveBeenCalled()
       })
 
-      it('has a status of 500', () => {
-        expect(response.status).toEqual(500)
+      it('passes an error to onUserCreationFailed', () => {
+        expect(onUserCreationFailedMock).toHaveBeenCalledWith(expect.any(Error))
       })
     })
   })

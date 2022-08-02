@@ -33,35 +33,39 @@ export abstract class UserController<U> extends Controller {
 
     if (newUserBody.password === newUserBody.confirmationPassword) {
       const hashedPassword = await Auth.hash(newUserBody.password)
-      this.beforeUserCreation(req, res)
-
-      const user = await this.createUser({
+      const userArguments = {
         ...newUserBody,
         hashedPassword: hashedPassword,
-      })
-
-      if (user === null) {
-        Logger.error({ message: `createUser in ${this.constructor.name} returned null. Returning 500.` })
-        res.status(500).json({ errors: ['user creation failed'] })
       }
 
-      Logger.debug({ message: 'user created' })
-      this.afterUserCreation(req, res, user)
-      Auth.setJwt({ user: { id: user.id } })
-      return res.json({ data: { user } })
+      if(!this.validateUserArguments(req, res, userArguments)) {
+        this.onValidateUserArgumentsFailed(req, res)
+      }
+
+      try {
+        const user = await this.createUser(userArguments)
+
+        if (user === null) {
+          Logger.error({ message: `CreateUser in ${this.constructor.name} returned null. Returning 500.` })
+          this.onUserCreationFailed(req, res, new Error('createUser returned null'))
+        }
+
+        Logger.debug({ message: 'User created' })
+        this.onUserCreationSuccess(req, res, user as U)
+
+      } catch (error) {
+        this.onUserCreationFailed(req, res, error as Error)
+      }
+
     } else {
-      Logger.debug({ message: 'users passwords do not match' })
-      return this.cantCreateUser(res)
+      Logger.debug({ message: 'Users passwords do not match' })
+      return this.onUserCreationFailed(req, res, new Error('User passwords do not match'))
     }
   }
 
-  protected abstract createUser(user: MinimalNewUserBodyWithHashedPassword & { [key: string]: string }): Promise<U & { id: string | number }>
-  protected beforeUserCreation(_req: NextApiRequest, _res: NextApiResponse): void {}
-  protected afterUserCreation(_req: NextApiRequest, _res: NextApiResponse, _user: U): void {}
-
-  private cantCreateUser(res: NextApiResponse) {
-    return res.status(500).json({
-      errors: ['unable to create user'],
-    })
-  }
+  abstract createUser(user: MinimalNewUserBodyWithHashedPassword & { [key: string]: string }): Promise<U & { id: string | number } | null>
+  abstract onUserCreationFailed(_req: NextApiRequest, res: NextApiResponse, error: Error): void
+  abstract onValidateUserArgumentsFailed(_req: NextApiRequest, res: NextApiResponse): void
+  abstract validateUserArguments(_req: NextApiRequest, res: NextApiResponse, userArgument: MinimalNewUserBodyWithHashedPassword): boolean
+  abstract onUserCreationSuccess(_req: NextApiRequest, _res: NextApiResponse, _user: U): void
 }
