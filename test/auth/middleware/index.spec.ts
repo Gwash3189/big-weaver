@@ -3,6 +3,7 @@ import { Auth } from '../../../src/auth'
 import { Controller } from '../../../src/controller'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { get, RequestBuilder, ResponseType } from '../../../src/test'
+import { Logger } from '../../../src/logger'
 
 describe('Protected', () => {
   let getSpy: jest.Mock
@@ -45,9 +46,14 @@ describe('Protected', () => {
     let response: ResponseType
 
     beforeEach(async () => {
+      Logger.mock('debug', jest.fn())
       getSpy = jest.fn()
       request = new RequestBuilder().cookie(Auth.jwtCookie, '123')
       response = await get(UserController, request)
+    })
+
+    afterEach(() => {
+      Logger.reset('debug')
     })
 
     it('does not call the controller action', async () => {
@@ -62,6 +68,14 @@ describe('Protected', () => {
       expect(response.json).toEqual({
         errors: ['Forbidden']
       })
+    })
+
+    it('sets the current JWT to null', async () => {
+      expect(CurrentJWT.get()).toEqual(null)
+    })
+
+    it('doesn\'t call the logger with a success message', async () => {
+      expect(Logger.debug).not.toHaveBeenCalledWith({ message: 'Successfully refreshed the JWT. Storing the decoded value.' })
     })
   })
 })

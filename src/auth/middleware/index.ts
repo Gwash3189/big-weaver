@@ -29,7 +29,7 @@ export class Protected extends Facade {
       stop()
       CurrentJWT.set(null)
 
-      res.status(403).json({ errors: [
+      return res.status(403).json({ errors: [
         'Forbidden'
       ]})
     }
