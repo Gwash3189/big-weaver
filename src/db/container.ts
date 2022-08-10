@@ -9,10 +9,10 @@ export class Container {
   }
 
   find<T>(repository: constructor<T>): T {
-    return this.container.get<T>(repository.constructor.name)
+    return this.container.get<T>(repository.name)
   }
 
   set<T>(repository: constructor<T>): void {
-    this.container.set(repository.constructor.name, new (repository as constructor<T>)())
+    this.container.set(repository.name, new (repository as constructor<T>)())
   }
 }
