@@ -43,7 +43,7 @@ export abstract class UserController<U> extends Controller {
       }
 
       try {
-        const user = await this.createUser(userArguments)
+        const user = await this.createUser(req, res, userArguments)
 
         if (user === null) {
           Logger.error({ message: `CreateUser in ${this.constructor.name} returned null. Returning 500.` })
@@ -61,7 +61,7 @@ export abstract class UserController<U> extends Controller {
     }
   }
 
-  abstract createUser(user: MinimalNewUserBodyWithHashedPassword & { [key: string]: string }): Promise<(U & { id: string | number }) | null>
+  abstract createUser(_req: NextApiRequest, _res: NextApiResponse, user: MinimalNewUserBodyWithHashedPassword & { [key: string]: string }): Promise<(U & { id: string | number }) | null>
   abstract onUserCreationFailed(_req: NextApiRequest, res: NextApiResponse, error: Error): void
   abstract onValidateUserArgumentsFailed(_req: NextApiRequest, res: NextApiResponse): void
   abstract validateUserArguments(_req: NextApiRequest, res: NextApiResponse, userArgument: MinimalNewUserBodyWithHashedPassword): boolean

@@ -21,7 +21,7 @@ describe('UserController', () => {
   }
 
   class UserController extends UController<User> {
-    createUser(_userDTO: unknown) {
+    createUser(_req: NextApiRequest, _res: NextApiResponse, _userDTO: unknown) {
       return Promise.resolve(createdUser)
     }
 
@@ -63,6 +63,7 @@ describe('UserController', () => {
   describeif((process.env.INTEGRATION as any) === 'true')('integration tests', () => {
     class IntegrationUserController extends UserController {
       async createUser(
+        _req: NextApiRequest, _res: NextApiResponse,
         user: { email: string; password: string; confirmationPassword: string; hashedPassword: string } & { [key: string]: string }
       ): Promise<{ id: string; name: string; email: string; hashedPassword: string }> {
         return await client.user.create({
