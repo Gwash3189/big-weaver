@@ -63,7 +63,8 @@ describe('UserController', () => {
   describeif((process.env.INTEGRATION as any) === 'true')('integration tests', () => {
     class IntegrationUserController extends UserController {
       async createUser(
-        _req: NextApiRequest, _res: NextApiResponse,
+        _req: NextApiRequest,
+        _res: NextApiResponse,
         user: { email: string; password: string; confirmationPassword: string; hashedPassword: string } & { [key: string]: string }
       ): Promise<{ id: string; name: string; email: string; hashedPassword: string }> {
         return await client.user.create({
