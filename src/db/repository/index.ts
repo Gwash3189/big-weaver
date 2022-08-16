@@ -17,17 +17,17 @@ export abstract class Repository<T, X> {
     })
   }
 
-  protected async querySingle(func: (prisma: T) => Promise<X | null>): Promise<X | null> {
+  protected async single(func: (prisma: T) => Promise<X | null>): Promise<X | null> {
     return this.query(func) as Promise<X | null>
   }
 
-  protected async queryMany(func: (prisma: T) => Promise<X | X[]>): Promise<X[]> {
+  protected async many(func: (prisma: T) => Promise<X[]>): Promise<X[]> {
     return this.query(func) as Promise<X[]>
   }
 
   public async all(page: number = 1, take: number = 30) {
     const skip = (page - 1) * take
-    return await this.queryMany(async item => {
+    return await this.many(async item => {
       return await (item as any).findMany({
         skip,
         take,
@@ -36,13 +36,13 @@ export abstract class Repository<T, X> {
   }
 
   public async first() {
-    return await this.querySingle(async item => {
+    return await this.single(async item => {
       return await (item as any).findFirst()
     })
   }
 
   async findById(id: string | Number) {
-    return await this.querySingle(async item => {
+    return await this.single(async item => {
       return await (item as any).findUnique({
         where: {
           id,

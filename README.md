@@ -54,9 +54,9 @@ export class UserRepository extends BaseRepository<Prisma.UserDelegate<User>, Us
   }
 
   async findByEmail(email: string) {
-    // use this.querySingle
+    // use this.single
     // returning a single record
-    return await this.querySingle(async (prisma) => {
+    return await this.single(async (prisma) => {
       return await prisma.findUnique({
         where: {
           email
@@ -66,7 +66,7 @@ export class UserRepository extends BaseRepository<Prisma.UserDelegate<User>, Us
   }
 
   async create(data: Omit<Prisma.UserCreateInput, 'id' | 'createdAt' | 'updatedAt'>) {
-    return await this.querySingle(async (prisma) => {
+    return await this.single(async (prisma) => {
       const creationData = {
         ...data,
         createdAt: new Date(),
@@ -80,7 +80,7 @@ export class UserRepository extends BaseRepository<Prisma.UserDelegate<User>, Us
   }
 
   async update(data: UpdateUserArguments) {
-    return await this.querySingle(async (prisma) => {
+    return await this.single(async (prisma) => {
       const updateData = {
         ...data,
         updatedAt: new Date()
@@ -96,7 +96,7 @@ export class UserRepository extends BaseRepository<Prisma.UserDelegate<User>, Us
   }
 
   async delete(id: string) {
-    return await this.querySingle(async (prisma) => {
+    return await this.single(async (prisma) => {
       return await prisma.delete({
         where: {
           id
