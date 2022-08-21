@@ -1,5 +1,5 @@
 {
-  "version": "0.0.13",
+  "version": "0.0.13-1",
   "license": "MIT",
   "main": "index.js",
   "typings": "index.d.ts",
@@ -48,7 +48,7 @@
     "@prisma/client": "3.7.0",
     "@types/cookie": "^0.4.1",
     "@types/jsonwebtoken": "^8.5.8",
-    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "cookie": "^0.4.2",
     "jsonwebtoken": "^8.5.1",
     "pino": "^7.10.0",
@@ -61,7 +61,7 @@
   "devDependencies": {
     "@size-limit/preset-small-lib": "7.0.5",
     "@tsconfig/node16": "^1.0.2",
-    "@types/bcrypt": "^5.0.0",
+    "@types/bcryptjs": "^2.4.2",
     "@types/uuid": "^8.3.4",
     "next": "12.2.x",
     "np": "7.6.0",
