@@ -24,12 +24,15 @@ describe('Protected', () => {
   describe('when then provided JWT is valid', () => {
     beforeEach(async () => {
       getSpy = jest.fn()
-      const jwt = await Auth.signJwt({
+      const jwt = await Auth.createJwt({
         user: {
           id: '123'
+        },
+        account: {
+          id: '123'
         }
-      }, {})
-      request = new RequestBuilder().cookie(Auth.jwtCookie, jwt)
+      })
+      request = new RequestBuilder().headers(Auth.header, jwt)
       await get(UserController, request)
     })
 
@@ -48,7 +51,7 @@ describe('Protected', () => {
     beforeEach(async () => {
       Logger.mock('debug', jest.fn())
       getSpy = jest.fn()
-      request = new RequestBuilder().cookie(Auth.jwtCookie, '123')
+      request = new RequestBuilder().headers(Auth.header, '123')
       response = await get(UserController, request)
     })
 
@@ -66,7 +69,7 @@ describe('Protected', () => {
 
     it('includes the correct errors in the json response', async () => {
       expect(response.json).toEqual({
-        errors: ['Forbidden']
+        errors: expect.arrayContaining(['Forbidden'])
       })
     })
 

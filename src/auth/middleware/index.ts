@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { Auth } from ".."
 import { Facade } from "../../facade"
 import { Logger } from "../../logger"
+import { AuthEnv } from "../env"
 
 class JWTJar extends Facade {
   constructor(private value: any | null) {
@@ -22,9 +23,15 @@ export const CurrentJWT = new JWTJar(null)
 export class Protected extends Facade {
   static async middleware(_req: NextApiRequest, res: NextApiResponse, stop: () => void) {
     Logger.debug({ message: 'Attempting to refresh the JWT for the incoming request' })
-    const result = await Auth.refresh()
+    const token = await Auth.getAuthToken()
 
-    if (result === false) {
+    try {
+      Logger.debug({ message: 'Attempting to decode & verify the current token.' })
+      const decodedToken = await Auth.verify(token, AuthEnv.jwtSecret())
+      const result = await Auth.refreshAuthToken(decodedToken)
+      Logger.debug({ message: 'Successfully refreshed the JWT. Storing the decoded value.' })
+      CurrentJWT.set(result)
+    } catch (error) {
       Logger.debug({ message: 'Refreshing the JWT failed. Sending 403.' })
       stop()
       CurrentJWT.set(null)
@@ -32,9 +39,7 @@ export class Protected extends Facade {
       return res.status(403).json({ errors: [
         'Forbidden'
       ]})
-    }
 
-    Logger.debug({ message: 'Successfully refreshed the JWT. Storing the decoded value.' })
-    CurrentJWT.set(result)
+    }
   }
 }

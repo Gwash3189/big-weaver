@@ -1,70 +1,60 @@
 import { Facade } from '../facade'
 import { Hash } from '../hash'
 import * as JWT from 'jsonwebtoken'
-import { Cookie } from '../cookie'
-import { Logger } from '../logger'
-import { CookieSerializeOptions } from 'cookie'
 import { AuthEnv } from './env'
+import { NetworkJar, RequestKey, ResponseKey } from '../network-jar'
+import { NextApiRequest, NextApiResponse } from 'next'
 
-export type JWTToken = { [key: string]: any }
+type Uuid = string
+export type DecodedJwtToken = {
+  user: {
+    id: Uuid
+  }
+  account: {
+    id: Uuid
+  }
+}
 
 export class Auth extends Facade {
-  static jwtCookie = 'baseline-jwt-cookie'
-
-  static async attempt(password: string, hashedPassword: string) {
-    return await Hash.check(password, hashedPassword)
+  static header = 'x-auth-token'
+  static verify(token: string, secret: string) {
+    return JWT.verify(token, secret) as DecodedJwtToken
   }
 
-  static async hash(password: string) {
-    return await Hash.make(password)
-  }
-
-  static async signJwt(args: JWTToken, options: JWT.SignOptions = { expiresIn: '1h' }): Promise<string> {
-    return new Promise((resolve, reject) => {
-      try {
-        resolve(JWT.sign(args, AuthEnv.jwt(), options))
-      } catch (e) {
-        reject(e)
-      }
+  static createJwt(payload: DecodedJwtToken) {
+    return JWT.sign(payload, AuthEnv.jwtSecret(), {
+      expiresIn: '10m',
     })
   }
 
-  static async removeJwt() {
-    Cookie.remove(this.jwtCookie)
+  static setAuthTokenHeader(token: string) {
+    const response = NetworkJar.get<NextApiResponse>(ResponseKey)
+    response.setHeader(Auth.header, token)
   }
 
-  static async setJwt(args: JWTToken, cookieOptions: CookieSerializeOptions = {}, jwtOptions: JWT.SignOptions = { expiresIn: '1h' }) {
-    Cookie.set(this.jwtCookie, await Auth.signJwt(args, jwtOptions), { httpOnly: true, domain: '/', ...cookieOptions })
+  static getAuthToken() {
+    const request = NetworkJar.get<NextApiRequest>(RequestKey)
+    return request.headers[Auth.header] as string
   }
 
-  static async verify(options: JWT.VerifyOptions = {}) {
-    const jwtValue = Cookie.get(this.jwtCookie)
-
-    if (jwtValue === undefined) {
-      return false
-    } else {
-      try {
-        return JWT.verify(jwtValue, AuthEnv.jwt(), options)
-      } catch (e) {
-        const error: Error = e as Error
-        Logger.error({ message: error.toString() })
-
-        return false
-      }
-    }
+  static checkPasswords(password: string, hashedPassword: string) {
+    return Hash.check(password, hashedPassword)
   }
 
-  static async refresh(verifyOptions: JWT.VerifyOptions = {}, signOptions: JWT.SignOptions = { expiresIn: '1h' }) {
-    const result = (await Auth.verify(verifyOptions)) as JWTToken | false
+  static hash(password: string) {
+    return Hash.make(password)
+  }
 
-    if (result !== false) {
-      delete result.exp
-      delete result.iat
-
-      await Auth.setJwt(result, {}, signOptions)
-      return result
-    }
-
-    return false
+  static async refreshAuthToken(jwtRecord: DecodedJwtToken) {
+    const token = await this.createJwt({
+      user: {
+        id: jwtRecord.user.id,
+      },
+      account: {
+        id: jwtRecord.account.id,
+      },
+    })
+    Auth.setAuthTokenHeader(token)
+    return Auth.verify(token, AuthEnv.jwtSecret())
   }
 }

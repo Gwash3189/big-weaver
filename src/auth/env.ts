@@ -6,12 +6,12 @@ export class AuthEnv extends Facade {
   static JWT_KEY_NAME = 'JWT_SECRET'
   static DEVELOPMENT_JWT_KEY = 'secret'
 
-  static jwt() {
+  static jwtSecret() {
     let jwtValue = Env.get(AuthEnv.JWT_KEY_NAME)
 
     if (!jwtValue) {
       if (Env.dev() || Env.test()) {
-        Logger.error({ message: 'JWT_VALUE environment varibale is not set. Using development key' })
+        Logger.debug({ message: 'JWT_VALUE environment varibale is not set. Using development key' })
         jwtValue = this.DEVELOPMENT_JWT_KEY
       } else {
         throw new Error('JWT_VALUE environment varibale is not set. Not in development environment - not using development secret')

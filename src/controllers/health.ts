@@ -1,10 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Controller } from '../controller'
-import { ConfigurationController } from './configuration'
 
 export class HealthController extends Controller {
   static checks() {
-    return [ConfigurationController.configured]
+    return [() => true]
   }
 
   get(_request: NextApiRequest, res: NextApiResponse) {

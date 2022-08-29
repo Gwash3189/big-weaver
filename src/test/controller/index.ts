@@ -8,6 +8,7 @@ export type RequestType =
       body: Record<string, any>
       method: string,
       cookies: Record<string, string>,
+      headers: Record<string, string>,
       query: Record<string, any>
     }
   | Record<string, any>
@@ -19,7 +20,8 @@ export class RequestBuilder {
     this.request = {
       body: {},
       cookies: {},
-      query: {}
+      query: {},
+      headers: {}
     }
   }
 
@@ -50,10 +52,21 @@ export class RequestBuilder {
     return this
   }
 
+  headers(name: string, value: string) {
+    this.request.headers = {
+      ...this.request.headers,
+      [name]: value
+    }
+
+    return this
+  }
+
   method(method: SupportedRequestMethods) {
     this.request.method = method.toUpperCase()
     return this
   }
+
+
 
   build<T>() {
     return this.request as T
