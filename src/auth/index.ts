@@ -1,9 +1,10 @@
-import { Facade } from '../facade'
-import { Hash } from '../hash'
+import { Facade } from '@/facade'
+import { Hash } from '@/hash'
 import * as JWT from 'jsonwebtoken'
-import { AuthEnv } from './env'
-import { NetworkJar, RequestKey, ResponseKey } from '../network-jar'
+import { AuthEnv } from '@/auth/env'
+import { NetworkJar, RequestKey, ResponseKey } from '@/network-jar'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { Session } from '@/session'
 
 type Uuid = string
 export type DecodedJwtToken = {
@@ -46,7 +47,19 @@ export class Auth extends Facade {
   }
 
   static async refreshAuthToken(jwtRecord: DecodedJwtToken) {
-    const token = await this.createJwt({
+    const { token, verified } = await new Auth().createToken(jwtRecord)
+    Auth.setAuthTokenHeader(token)
+    return verified
+  }
+
+  static async setSessionToken(jwtRecord: DecodedJwtToken) {
+    const { token, verified } = await new Auth().createToken(jwtRecord)
+    Session.set(Auth.header, token)
+    return verified
+  }
+
+  private async createToken(jwtRecord: DecodedJwtToken) {
+    const token = await Auth.createJwt({
       user: {
         id: jwtRecord.user.id,
       },
@@ -54,7 +67,11 @@ export class Auth extends Facade {
         id: jwtRecord.account.id,
       },
     })
-    Auth.setAuthTokenHeader(token)
-    return Auth.verify(token, AuthEnv.jwtSecret())
+    const verified = Auth.verify(token, AuthEnv.jwtSecret())
+
+    return {
+      token,
+      verified,
+    }
   }
 }

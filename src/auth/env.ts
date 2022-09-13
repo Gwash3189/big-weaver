@@ -1,6 +1,6 @@
-import { Env } from '../env'
-import { Facade } from '../facade'
-import { Logger } from '../logger'
+import { Env } from '@/env'
+import { Facade } from '@/facade'
+import { Logger } from '@/logger'
 
 export class AuthEnv extends Facade {
   static JWT_KEY_NAME = 'JWT_SECRET'

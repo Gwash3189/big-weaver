@@ -50,9 +50,12 @@
     "@types/jsonwebtoken": "^8.5.8",
     "bcryptjs": "^2.4.3",
     "cookie": "^0.4.2",
+    "cookies": "^0.8.0",
+    "dayjs": "^1.11.5",
     "jsonwebtoken": "^8.5.1",
     "pino": "^7.10.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "zod": "^3.18.0"
   },
   "peerDependencies": {
     "@prisma/client": "3.7.0",
@@ -62,6 +65,7 @@
     "@size-limit/preset-small-lib": "7.0.5",
     "@tsconfig/node16": "^1.0.2",
     "@types/bcryptjs": "^2.4.2",
+    "@types/cookies": "^0.7.7",
     "@types/uuid": "^8.3.4",
     "next": "12.2.x",
     "np": "7.6.0",

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Controller } from '../controller'
+import { Controller } from '@/controller'
 
 export class HealthController extends Controller {
   static checks() {

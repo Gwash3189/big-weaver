@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { Auth } from ".."
-import { Facade } from "../../facade"
-import { Logger } from "../../logger"
-import { AuthEnv } from "../env"
+import { Facade } from "@/facade"
+import { Logger } from "@/logger"
+import { AuthEnv } from "@/auth/env"
 
 class JWTJar extends Facade {
   constructor(private value: any | null) {

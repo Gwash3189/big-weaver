@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Facade } from '../facade'
-import { Logger } from '../logger'
-import { constructor } from '../types'
-import { SupportedRequestMethods } from './execution'
-import { AfterMiddleware, BeforeMiddleware, MiddlewareProvider } from './middleware'
-import { Middleware } from './types'
+import { Facade } from '@/facade'
+import { Logger } from '@/logger'
+import { constructor } from '@/types'
+import { SupportedRequestMethods } from '@/controller/execution'
+import { AfterMiddleware, BeforeMiddleware, MiddlewareProvider } from '@/controller/middleware'
+import { Middleware } from '@/controller/types'
 
 export class Controller extends Facade {
   private readonly beforeMiddleware: Array<BeforeMiddleware> = []

@@ -1,5 +1,5 @@
-import { Jar } from '../jar'
-import { constructor } from '../types'
+import { Jar } from '@/jar'
+import { constructor } from '@/types'
 
 export class Container {
   private container: Jar<any>
