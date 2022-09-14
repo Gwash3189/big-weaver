@@ -5,7 +5,7 @@ import { FlashConstants } from '@/flash/flash-constants'
 import { Session, SessionValue } from '@/session'
 
 export class Flash extends Facade {
-  static clear() {
+  static clear (): void {
     const names = [FlashConstants.error, FlashConstants.info, FlashConstants.success, FlashConstants.warning]
 
     for (const name of names) {
@@ -13,7 +13,7 @@ export class Flash extends Facade {
     }
   }
 
-  static success(message: SessionValue, options: Cookies.SetOption) {
+  static success (message: SessionValue, options: Cookies.SetOption): void {
     const flashes = Session.get(FlashConstants.success, [])
 
     Session.set(
@@ -22,20 +22,20 @@ export class Flash extends Facade {
         ...flashes,
         {
           message,
-          type: 'success',
-        },
+          type: 'success'
+        }
       ],
       {
         ...options,
         httpOnly: false,
         expires: dayjs(Date.now())
           .add(1, 'day')
-          .toDate(),
+          .toDate()
       }
     )
   }
 
-  static info(message: SessionValue, options: Cookies.SetOption) {
+  static info (message: SessionValue, options: Cookies.SetOption): void {
     const flashes = Session.get(FlashConstants.info, [])
 
     Session.set(
@@ -44,20 +44,20 @@ export class Flash extends Facade {
         ...flashes,
         {
           message,
-          type: 'info',
-        },
+          type: 'info'
+        }
       ],
       {
         ...options,
         httpOnly: false,
         expires: dayjs(Date.now())
           .add(1, 'day')
-          .toDate(),
+          .toDate()
       }
     )
   }
 
-  static warning(message: SessionValue, options: Cookies.SetOption) {
+  static warning (message: SessionValue, options: Cookies.SetOption): void {
     const flashes = Session.get(FlashConstants.warning, [])
 
     Session.set(
@@ -66,20 +66,20 @@ export class Flash extends Facade {
         ...flashes,
         {
           message,
-          type: 'warning',
-        },
+          type: 'warning'
+        }
       ],
       {
         ...options,
         httpOnly: false,
         expires: dayjs(Date.now())
           .add(1, 'day')
-          .toDate(),
+          .toDate()
       }
     )
   }
 
-  static error(message: SessionValue, options: Cookies.SetOption) {
+  static error (message: SessionValue, options: Cookies.SetOption): void {
     const flashes = Session.get(FlashConstants.error, [])
 
     Session.set(
@@ -88,15 +88,15 @@ export class Flash extends Facade {
         ...flashes,
         {
           message,
-          type: 'error',
-        },
+          type: 'error'
+        }
       ],
       {
         ...options,
         httpOnly: false,
         expires: dayjs(Date.now())
           .add(1, 'day')
-          .toDate(),
+          .toDate()
       }
     )
   }

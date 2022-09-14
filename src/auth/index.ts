@@ -7,7 +7,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { Session } from '@/session'
 
 type Uuid = string
-export type DecodedJwtToken = {
+export interface DecodedJwtToken {
   user: {
     id: Uuid
   }
@@ -18,60 +18,60 @@ export type DecodedJwtToken = {
 
 export class Auth extends Facade {
   static header = 'x-auth-token'
-  static verify(token: string, secret: string) {
+  static verify (token: string, secret: string): DecodedJwtToken {
     return JWT.verify(token, secret) as DecodedJwtToken
   }
 
-  static createJwt(payload: DecodedJwtToken) {
+  static createJwt (payload: DecodedJwtToken): string {
     return JWT.sign(payload, AuthEnv.jwtSecret(), {
-      expiresIn: '10m',
+      expiresIn: '10m'
     })
   }
 
-  static setAuthTokenHeader(token: string) {
+  static setAuthTokenHeader (token: string): void {
     const response = NetworkJar.get<NextApiResponse>(ResponseKey)
     response.setHeader(Auth.header, token)
   }
 
-  static getAuthToken() {
+  static getAuthToken (): string {
     const request = NetworkJar.get<NextApiRequest>(RequestKey)
     return request.headers[Auth.header] as string
   }
 
-  static checkPasswords(password: string, hashedPassword: string) {
-    return Hash.check(password, hashedPassword)
+  static async checkPasswords (password: string, hashedPassword: string): Promise<boolean> {
+    return await Hash.check(password, hashedPassword)
   }
 
-  static hash(password: string) {
-    return Hash.make(password)
+  static async hash (password: string): Promise<string> {
+    return await Hash.make(password)
   }
 
-  static async refreshAuthToken(jwtRecord: DecodedJwtToken) {
+  static async refreshAuthToken (jwtRecord: DecodedJwtToken): Promise<DecodedJwtToken> {
     const { token, verified } = await new Auth().createToken(jwtRecord)
     Auth.setAuthTokenHeader(token)
     return verified
   }
 
-  static async setSessionToken(jwtRecord: DecodedJwtToken) {
+  static async setSessionToken (jwtRecord: DecodedJwtToken): Promise<DecodedJwtToken> {
     const { token, verified } = await new Auth().createToken(jwtRecord)
     Session.set(Auth.header, token)
     return verified
   }
 
-  private async createToken(jwtRecord: DecodedJwtToken) {
+  private async createToken (jwtRecord: DecodedJwtToken): Promise<{token: string, verified: DecodedJwtToken}> {
     const token = await Auth.createJwt({
       user: {
-        id: jwtRecord.user.id,
+        id: jwtRecord.user.id
       },
       account: {
-        id: jwtRecord.account.id,
-      },
+        id: jwtRecord.account.id
+      }
     })
     const verified = Auth.verify(token, AuthEnv.jwtSecret())
 
     return {
       token,
-      verified,
+      verified
     }
   }
 }

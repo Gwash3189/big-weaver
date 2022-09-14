@@ -8,20 +8,20 @@ let prisma: PrismaClient | null
 export const Repositorys = new Container()
 
 export abstract class BaseRepository<T, X> extends Repository<T, X> {
-  abstract createClient(): PrismaClient
+  abstract createClient (): PrismaClient
 
-  getClient(): PrismaClient {
-    if (!prisma) {
+  getClient (): PrismaClient {
+    if (prisma == null) {
       prisma = this.createClient()
     }
     return prisma
   }
 
-  mock(method: string, imple: () => any) {
+  mock (method: string, imple: () => any): void {
     Facade.mock.bind(this)(method, imple)
   }
 
-  reset(...methods: string[]) {
+  reset (...methods: string[]): void {
     Facade.reset.bind(this)(...methods)
   }
 }

@@ -16,19 +16,22 @@
     "test:integration": "docker compose up -d && sleep 4 && prisma migrate reset -f && INTEGRATION=true npm run test:coverage && docker compose down",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "lint": "tsdx lint src/**/*.ts test/**/*.spec.ts",
-    "lint:fix": "tsdx lint src/**/*.ts test/**/*.spec.ts --fix",
+    "lint": "npx ts-standard | npx snazzy",
+    "lint:fix": "npx ts-standard --fix | npx snazzy",
     "prepare": "npm run build",
     "size": "size-limit",
     "analyze": "size-limit --why",
     "check": "npm run lint && npm run build && npm run test:integration",
     "dist": "npm run lint && npm run test:integration && npm run build && cp README.md dist && cd dist && npm publish --"
   },
-  "prettier": {
-    "printWidth": 160,
-    "semi": false,
-    "singleQuote": true,
-    "trailingComma": "es5"
+  "ts-standard": {
+    "project": "./tsconfig.json",
+    "ignore": [
+      "dist",
+      "prisma",
+      "coverage",
+      "*.spec.*"
+    ]
   },
   "name": "nextjs-backend-helpers",
   "author": "Adam Beck",
@@ -73,9 +76,10 @@
     "pino-pretty": "7.6.1",
     "prisma": "3.14.0",
     "size-limit": "7.0.5",
+    "snazzy": "^9.0.0",
     "ts-jest": "29.0.1",
-    "tsdx": "0.14.1",
+    "ts-standard": "^11.0.0",
     "tslib": "2.3.1",
-    "typescript": "4.5.4"
+    "typescript": "^4.8.3"
   }
 }

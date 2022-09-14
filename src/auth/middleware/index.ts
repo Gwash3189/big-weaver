@@ -1,19 +1,19 @@
-import { NextApiRequest, NextApiResponse } from "next"
-import { Auth } from ".."
-import { Facade } from "@/facade"
-import { Logger } from "@/logger"
-import { AuthEnv } from "@/auth/env"
+import { NextApiRequest, NextApiResponse } from 'next'
+import { Auth } from '..'
+import { Facade } from '@/facade'
+import { Logger } from '@/logger'
+import { AuthEnv } from '@/auth/env'
 
 class JWTJar extends Facade {
-  constructor(private value: any | null) {
+  constructor (private value: any | null) {
     super()
   }
 
-  set(value: any) {
+  set (value: any): void {
     this.value = value
   }
 
-  get<T>() {
+  get<T>(): T {
     return this.value as T
   }
 }
@@ -21,7 +21,7 @@ class JWTJar extends Facade {
 export const CurrentJWT = new JWTJar(null)
 
 export class Protected extends Facade {
-  static async middleware(_req: NextApiRequest, res: NextApiResponse, stop: () => void) {
+  static async middleware (_req: NextApiRequest, res: NextApiResponse, stop: () => void): Promise<void> {
     Logger.debug({ message: 'Attempting to refresh the JWT for the incoming request' })
     const token = await Auth.getAuthToken()
 
@@ -36,10 +36,11 @@ export class Protected extends Facade {
       stop()
       CurrentJWT.set(null)
 
-      return res.status(403).json({ errors: [
-        'Forbidden'
-      ]})
-
+      return res.status(403).json({
+        errors: [
+          'Forbidden'
+        ]
+      })
     }
   }
 }

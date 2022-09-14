@@ -2,9 +2,9 @@ import { Jar } from '@/jar'
 import { constructor } from '@/types'
 
 export class Container {
-  private container: Jar<any>
+  private readonly container: Jar<any>
 
-  constructor() {
+  constructor () {
     this.container = new Jar()
   }
 
@@ -12,7 +12,7 @@ export class Container {
     return this.container.get<T>(repository.name)
   }
 
-  set<T>(repository: constructor<T>): void {
-    this.container.set(repository.name, new (repository as constructor<T>)())
+  set<T>(Repository: constructor<T>): void {
+    this.container.set(Repository.name, new (Repository)())
   }
 }

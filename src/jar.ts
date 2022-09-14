@@ -3,17 +3,17 @@ import { Facade } from './facade'
 export class Jar<U> extends Facade {
   protected jar: Map<string, U>
 
-  constructor() {
+  constructor () {
     super()
 
     this.jar = new Map<string, U>()
   }
 
-  set(name: string, instance: U) {
+  set (name: string, instance: U): void {
     this.jar.set(name, instance)
   }
 
-  get<T>(name: string) {
+  get<T>(name: string): T {
     const item = this.jar.get(name)
 
     if (item === undefined) {

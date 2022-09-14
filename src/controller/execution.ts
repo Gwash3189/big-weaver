@@ -1,11 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { RequestKey, ResponseKey } from '@/network-jar'
+import { RequestKey, ResponseKey, NetworkJar } from '@/network-jar'
 import { Controller } from '@/controller/controller'
 import { ControllerJar } from '@/controller/jar'
 import { MiddlewareExecutor } from '@/controller/middleware'
 import { Logger } from '@/logger'
 import { constructor } from '@/types'
-import { NetworkJar } from '@/network-jar'
 import { v4 as UUID } from 'uuid'
 
 export type SupportedRequestMethods = 'get' | 'put' | 'delete' | 'post' | 'patch' | 'head' | 'options'
@@ -14,32 +13,30 @@ let startTime = Date.now()
 let endTime = Date.now()
 let difference = 0
 
-function registerRequestAndResponseObjects(req: NextApiRequest, res: NextApiResponse) {
+function registerRequestAndResponseObjects (req: NextApiRequest, res: NextApiResponse): void {
   NetworkJar.set(RequestKey, req)
   NetworkJar.set(ResponseKey, res)
 }
 
-function startCycleTimer() {
+function startCycleTimer (): void {
   startTime = Date.now()
   Logger.debug({ message: 'Request received', startTime })
 }
 
-function stopCycleTimer() {
+function stopCycleTimer (): void {
   endTime = Date.now()
   difference = endTime - startTime
   Logger.debug({ message: 'Processing complete', startTime, endTime, difference: `${difference}ms` })
 }
 
-function getControllerInstance(controllerName: string) {
+function getControllerInstance (controllerName: string): Controller {
   const instance = ControllerJar.get<Controller>(controllerName)
   Logger.debug({ message: 'Controller instance resolved', controller: instance.constructor.name, fullControllerName: controllerName })
   return instance
 }
 
-export async function executeRequest(method: SupportedRequestMethods, instance: Controller, req: NextApiRequest, res: NextApiResponse) {
-  let shouldStop: boolean
-
-  shouldStop = await MiddlewareExecutor.before(method, instance, req, res)
+export async function executeRequest (method: SupportedRequestMethods, instance: Controller, req: NextApiRequest, res: NextApiResponse): Promise<any> {
+  const shouldStop = await MiddlewareExecutor.before(method, instance, req, res)
 
   if (shouldStop) {
     return
@@ -51,11 +48,11 @@ export async function executeRequest(method: SupportedRequestMethods, instance: 
   return returnValue
 }
 
-export function install(controller: constructor<Controller>) {
-  const controllerName = `${controller.name}-${UUID()}`
-  ControllerJar.set(controllerName, new controller())
-  return async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method) {
+export function install (IncomingController: constructor<Controller>): (req: NextApiRequest, res: NextApiResponse) => Promise<any> {
+  const controllerName = `${IncomingController.name}-${UUID()}`
+  ControllerJar.set(controllerName, new IncomingController())
+  return async function handler (req: NextApiRequest, res: NextApiResponse) {
+    if (req.method !== undefined) {
       startCycleTimer()
       registerRequestAndResponseObjects(req, res)
       const instance = getControllerInstance(controllerName)

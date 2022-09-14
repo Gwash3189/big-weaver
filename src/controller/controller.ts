@@ -7,58 +7,57 @@ import { AfterMiddleware, BeforeMiddleware, MiddlewareProvider } from '@/control
 import { Middleware } from '@/controller/types'
 
 export class Controller extends Facade {
-  private readonly beforeMiddleware: Array<BeforeMiddleware> = []
-  private readonly afterMiddleware: Array<AfterMiddleware> = []
-  private readonly rescueMap: Record<string, Function>
+  private readonly beforeMiddleware: BeforeMiddleware[] = []
+  private readonly afterMiddleware: AfterMiddleware[] = []
+  private readonly rescueMap: Record<string, (error: any, request: NextApiRequest, response: NextApiResponse) => Promise<any>>
 
   static configuration = {
-    api: { bodyParser: true },
+    api: { bodyParser: true }
   }
 
-  constructor() {
+  constructor () {
     super()
 
     this.rescueMap = {}
   }
 
-  protected before(runner: Middleware) {
+  protected before (runner: Middleware): MiddlewareProvider {
     const middleware = new BeforeMiddleware(runner)
     this.beforeMiddleware.push(middleware)
     return new MiddlewareProvider(middleware)
   }
 
-  protected after(runner: Middleware) {
+  protected after (runner: Middleware): MiddlewareProvider {
     const middleware = new AfterMiddleware(runner)
     this.afterMiddleware.push(middleware)
     return new MiddlewareProvider(middleware)
   }
 
-  protected rescue<E>(exceptionClass: constructor<E>, func: (error: E, request: NextApiRequest, response: NextApiResponse) => any) {
+  protected rescue<E>(exceptionClass: constructor<E>, func: (error: E, request: NextApiRequest, response: NextApiResponse) => any): this {
     this.rescueMap[exceptionClass.name] = func
     return this
   }
 
-  async handle(method: SupportedRequestMethods, request: NextApiRequest, response: NextApiResponse) {
+  async handle (method: SupportedRequestMethods, request: NextApiRequest, response: NextApiResponse): Promise<any> {
     try {
-      if (this[method]) {
-        // prettier-ignore
-        return await this[method](request, response)
+      if (Object.prototype.hasOwnProperty.call(this, method)) {
+        return this[method](request, response)
       }
 
       Logger.warn({ message: `${this.constructor.name} does not support ${method}` })
-      Logger.warn({ message: `sending a 404 and ending the request` })
+      Logger.warn({ message: 'sending a 404 and ending the request' })
 
       return response.status(404).end()
     } catch (_error) {
       const error = _error as Error
 
-      if (this.rescueMap[error.constructor.name]) {
+      if (Object.prototype.hasOwnProperty.call(this.rescueMap, error.constructor.name)) {
         return await this.rescueMap[error.constructor.name](error, request, response)
       }
 
       Logger.error({ message: `unhandled error thrown by ${this.constructor.name} controller.` })
       Logger.error({ message: `to handle this error, use this.rescue(${error.constructor.name}, (error, req, res) => ...)` })
-      Logger.error({ message: `sending 500 and ending the response` })
+      Logger.error({ message: 'sending 500 and ending the response' })
       Logger.error({ message: 'Error message', errorMessage: error.message })
       Logger.error({ message: 'Error name', errorName: error.name })
 
@@ -66,35 +65,35 @@ export class Controller extends Facade {
     }
   }
 
-  get(_req: NextApiRequest, res: NextApiResponse) {
+  get (_req: NextApiRequest, res: NextApiResponse): void {
     this.notFound(res)
   }
 
-  post(_req: NextApiRequest, res: NextApiResponse) {
+  post (_req: NextApiRequest, res: NextApiResponse): void {
     this.notFound(res)
   }
 
-  delete(_req: NextApiRequest, res: NextApiResponse) {
+  delete (_req: NextApiRequest, res: NextApiResponse): void {
     this.notFound(res)
   }
 
-  patch(_req: NextApiRequest, res: NextApiResponse) {
+  patch (_req: NextApiRequest, res: NextApiResponse): void {
     this.notFound(res)
   }
 
-  put(_req: NextApiRequest, res: NextApiResponse) {
+  put (_req: NextApiRequest, res: NextApiResponse): void {
     this.notFound(res)
   }
 
-  head(_req: NextApiRequest, res: NextApiResponse) {
+  head (_req: NextApiRequest, res: NextApiResponse): void {
     this.notFound(res)
   }
 
-  options(_req: NextApiRequest, res: NextApiResponse) {
+  options (_req: NextApiRequest, res: NextApiResponse): void {
     this.notFound(res)
   }
 
-  private notFound(res: NextApiResponse) {
+  private notFound (res: NextApiResponse): NextApiResponse<any> {
     return res.redirect('/404')
   }
 }

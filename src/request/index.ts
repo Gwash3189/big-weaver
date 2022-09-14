@@ -1,15 +1,15 @@
 import { NextApiRequest } from 'next'
 
-export function getBody<T>(request: NextApiRequest) {
+export function getBody<T> (request: NextApiRequest): T {
   return request.body as T
 }
 
-export function getQuery<T>(request: NextApiRequest) {
+export function getQuery<T> (request: NextApiRequest): T {
   return (request.query as unknown) as T
 }
 
-export function getPageFromQuery(request: NextApiRequest) {
-  let page = parseInt(getQuery<{ page?: string }>(request).page || '1', 10)
+export function getPageFromQuery (request: NextApiRequest): number {
+  let page = parseInt(getQuery<{ page?: string }>(request).page ?? '1', 10)
   if (isNaN(page) || page <= 0) {
     page = 1
   }

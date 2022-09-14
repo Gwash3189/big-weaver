@@ -1,14 +1,14 @@
 export const FlashConstants = {
-  get success() {
+  get success () {
     return 'flash:success'
   },
-  get error() {
+  get error () {
     return 'flash:error'
   },
-  get warning() {
+  get warning () {
     return 'flash:warning'
   },
-  get info() {
+  get info () {
     return 'flash:info'
-  },
+  }
 }
