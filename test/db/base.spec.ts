@@ -3,9 +3,7 @@ import { BaseRepository } from '../../src/db'
 import { repository } from '../../src/db'
 import { Repositorys } from '../../src/db/repository/base'
 
-const describeif = (condition: boolean) => (condition ? describe : describe.skip)
-
-describeif((process.env.INTEGRATION as any) === 'true')('BaseRepository', () => {
+describe('BaseRepository', () => {
   class UserRepository extends BaseRepository<Prisma.UserDelegate<any>, User> {
     createClient(): PrismaClient {
       return new PrismaClient()

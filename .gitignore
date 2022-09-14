@@ -7,4 +7,5 @@ coverage
 *.esm.*
 *.cjs.*
 index.js
-postgres/*
+postgres
+data
