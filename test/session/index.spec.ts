@@ -57,7 +57,7 @@ describe('Session', () => {
       getMock = jest.fn()
       NetworkJar.set(RequestKey, ({} as unknown) as NextApiRequest)
       NetworkJar.set(ResponseKey, ({} as unknown) as NextApiRequest)
-      Session.get('name')
+      Session.get('name', undefined)
     })
 
     it('gets the required cookie', () => {
@@ -65,28 +65,18 @@ describe('Session', () => {
     })
 
     describe("when there isn't anything to get", () => {
-      let result: undefined
+      let result: { defaultValue: boolean }
 
       beforeEach(() => {
         getMock = jest.fn(() => undefined)
         NetworkJar.set(RequestKey, ({} as unknown) as NextApiRequest)
         NetworkJar.set(ResponseKey, ({} as unknown) as NextApiRequest)
-        result = Session.get('name')
+        result = Session.get('name', { defaultValue: true })
       })
 
-      it('returns undefined', () => {
-        expect(result).toBeUndefined()
-      })
-
-      describe('when a default value is given', () => {
-        beforeEach(() => {
-          result = Session.get('name', { defaultValue: true })
-        })
-
-        it('returns that default value', () => {
-          expect(result).toEqual({
-            defaultValue: true,
-          })
+      it('returns that default value', () => {
+        expect(result).toEqual({
+          defaultValue: true,
         })
       })
     })

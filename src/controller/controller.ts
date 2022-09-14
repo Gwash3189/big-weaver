@@ -40,7 +40,7 @@ export class Controller extends Facade {
 
   async handle (method: SupportedRequestMethods, request: NextApiRequest, response: NextApiResponse): Promise<any> {
     try {
-      if (Object.prototype.hasOwnProperty.call(this, method)) {
+      if (this[method] !== undefined) {
         return this[method](request, response)
       }
 
@@ -51,7 +51,7 @@ export class Controller extends Facade {
     } catch (_error) {
       const error = _error as Error
 
-      if (Object.prototype.hasOwnProperty.call(this.rescueMap, error.constructor.name)) {
+      if (this.rescueMap[error.constructor.name] !== undefined) {
         return await this.rescueMap[error.constructor.name](error, request, response)
       }
 
