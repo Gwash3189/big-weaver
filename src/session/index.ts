@@ -1,6 +1,6 @@
-import { Facade } from '@/facade'
+import { Facade } from '../facade'
 import Cookies from 'cookies'
-import { NetworkJar, RequestKey, ResponseKey } from '@/network-jar'
+import { NetworkJar, RequestKey, ResponseKey } from '../network-jar'
 import { NextApiRequest, NextApiResponse } from 'next'
 import dayjs from 'dayjs'
 

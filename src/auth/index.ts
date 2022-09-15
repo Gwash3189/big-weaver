@@ -1,10 +1,10 @@
-import { Facade } from '@/facade'
-import { Hash } from '@/hash'
+import { Facade } from '../facade'
+import { Hash } from '../hash'
 import * as JWT from 'jsonwebtoken'
-import { AuthEnv } from '@/auth/env'
-import { NetworkJar, RequestKey, ResponseKey } from '@/network-jar'
+import { AuthEnv } from '../auth/env'
+import { NetworkJar, RequestKey, ResponseKey } from '../network-jar'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Session } from '@/session'
+import { Session } from '../session'
 
 type Uuid = string
 export interface DecodedJwtToken {

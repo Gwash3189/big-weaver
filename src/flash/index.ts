@@ -1,8 +1,8 @@
 import Cookies from 'cookies'
 import dayjs from 'dayjs'
-import { Facade } from '@/facade'
-import { FlashConstants } from '@/flash/flash-constants'
-import { Session, SessionValue } from '@/session'
+import { Facade } from '../facade'
+import { FlashConstants } from '../flash/flash-constants'
+import { Session, SessionValue } from '../session'
 
 export class Flash extends Facade {
   static clear (): void {

@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Facade } from '@/facade'
-import { Controller } from '@/controller'
-import { SupportedRequestMethods } from '@/controller/execution'
-import { ActionReturn, Middleware as IMiddleware } from '@/controller/types'
+import { Facade } from '../facade'
+import { Controller } from '../controller'
+import { SupportedRequestMethods } from '../controller/execution'
+import { ActionReturn, Middleware as IMiddleware } from '../controller/types'
 
 export class Middleware {
   constructor (public handle: IMiddleware, private _except: string[] = [], private _only: string[] = []) {

@@ -1,7 +1,7 @@
 import Cookies from 'cookies'
-import { Facade } from '@/facade'
+import { Facade } from './facade'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { NetworkJar, RequestKey, ResponseKey } from '@/network-jar'
+import { NetworkJar, RequestKey, ResponseKey } from './network-jar'
 
 export class Cookie extends Facade {
   get<T>(name: string, defaultValue: T): T {

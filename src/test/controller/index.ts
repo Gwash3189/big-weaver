@@ -1,7 +1,7 @@
 import { NextApiResponse } from 'next'
-import { Controller, install } from '@/controller'
-import { SupportedRequestMethods } from '@/controller/execution'
-import { Facade } from '@/facade'
+import { Controller, install } from '../../controller'
+import { SupportedRequestMethods } from '../../controller/execution'
+import { Facade } from '../../facade'
 
 export type RequestType = {
   body: Record<string, any>

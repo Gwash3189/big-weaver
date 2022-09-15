@@ -1,5 +1,5 @@
 import { NextApiRequest } from 'next'
-import { NetworkJar, RequestKey } from '@/network-jar'
+import { NetworkJar, RequestKey } from '../network-jar'
 import { RequestSchema } from './request-schema'
 import { SafeParseError, SafeParseSuccess } from 'zod'
 

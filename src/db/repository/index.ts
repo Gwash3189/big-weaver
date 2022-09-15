@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { Use, use } from '@/db/client'
+import { Use, use } from '../../db/client'
 
 export abstract class Repository<T, X> {
   protected db: Use

@@ -1,7 +1,7 @@
-import { Repository } from '@/db/repository'
+import { Repository } from '../../db/repository'
 import { PrismaClient } from '@prisma/client'
-import { Facade } from '@/facade'
-import { Container } from '@/db/container'
+import { Facade } from '../../facade'
+import { Container } from '../../db/container'
 
 let prisma: PrismaClient | null
 
