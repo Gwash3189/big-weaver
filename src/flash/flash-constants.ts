@@ -10,5 +10,8 @@ export const FlashConstants = {
   },
   get info () {
     return 'flash:info'
+  },
+  get names () {
+    return [FlashConstants.error, FlashConstants.info, FlashConstants.success, FlashConstants.warning]
   }
 }
