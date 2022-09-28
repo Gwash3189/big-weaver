@@ -2,10 +2,6 @@
   "include": ["src", "types"],
   "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
     "experimentalDecorators": true,
     "lib": ["esnext"],
     "importHelpers": true,

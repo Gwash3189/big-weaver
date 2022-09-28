@@ -1,5 +1,5 @@
-import { NetworkJar } from '@/network-jar'
-import { Parameters } from '@/request/parameters'
+import { NetworkJar } from '../network-jar'
+import { Parameters } from '../request/parameters'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ZodTypeAny } from 'zod'
 
