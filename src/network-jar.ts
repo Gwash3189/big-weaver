@@ -5,20 +5,12 @@ export const ResponseKey = 'response'
 export const RequestKey = 'request'
 
 export class NetworkContainer extends Jar<NextApiRequest | NextApiResponse> {
-  readonly container: Jar<NextApiRequest | NextApiResponse>
-
-  constructor () {
-    super()
-
-    this.container = new Jar<NextApiRequest | NextApiResponse>()
-  }
-
   request (): NextApiRequest {
-    return this.container.get<NextApiRequest>(RequestKey)
+    return this.jar.get(RequestKey) as NextApiRequest
   }
 
   response (): NextApiResponse {
-    return this.container.get<NextApiResponse>(ResponseKey)
+    return this.jar.get(ResponseKey) as NextApiResponse
   }
 }
 
