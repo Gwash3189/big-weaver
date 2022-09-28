@@ -1,4 +1,4 @@
-const MethodJar = new Map<string, Function>()
+const MethodJar = new Map<string, () => void>()
 
 const getName = (item: any): string => {
   if (typeof item === 'function') {
@@ -20,7 +20,7 @@ export class Facade {
 
   static reset (...methods: string[]): void {
     methods.forEach(method => {
-      ;(this as { [key: string]: any })[method] = MethodJar.get(`${getName(this)}-${method}`)
+      (this as { [key: string]: any })[method] = MethodJar.get(`${getName(this)}-${method}`)
     })
   }
 }

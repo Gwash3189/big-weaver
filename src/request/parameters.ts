@@ -1,44 +1,29 @@
 import { NextApiRequest } from 'next'
+import { z } from 'zod'
+import { Facade } from '..'
 import { NetworkJar, RequestKey } from '../network-jar'
-import { RequestSchema } from './request-schema'
-import { SafeParseError, SafeParseSuccess } from 'zod'
 
-interface ValidationSuccess extends SafeParseSuccess<{
-  [x: string]: any
-}> {
+export class Parameters extends Facade {
+  public query: Record<string, any>
+  public body: Record<string, any>
 
-}
+  constructor (request: NextApiRequest) {
+    super()
 
-interface ValidationError extends SafeParseError<{
-  [x: string]: any
-}> {
-
-}
-
-type ValidationResult = ValidationSuccess | ValidationError
-
-export class Parameters {
-  public parameters: Record<string, any>
-
-  constructor (public query: Partial<Record<string, string | string[]>> = {}, public body: Record<string, any> = {}) {
-    this.parameters = {
-      ...query,
-      ...body
-    }
+    this.query = request.query
+    this.body = request.body
   }
 
-  static get (): Parameters {
+  static get () {
     const request = NetworkJar.get<NextApiRequest>(RequestKey)
-    return new Parameters(request.query, request.body)
+    return new Parameters(request)
   }
 
-  validate (options: RequestSchema<any, any>): ValidationResult {
-    const result = options.zod.safeParse(Parameters.get())
-
-    if (result.success) {
-      return result
-    }
-
-    return result
+  // eslint-disable-next-line
+  validate (options: z.ZodTypeAny) {
+    return options.safeParse({
+      query: this.query,
+      body: this.body
+    })
   }
 }

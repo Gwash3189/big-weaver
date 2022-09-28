@@ -29,10 +29,6 @@ describe('AppController', () => {
         body: {
           body: true,
         },
-        parameters: {
-          body: true,
-          query: 'true',
-        },
         query: {
           query: 'true',
         },

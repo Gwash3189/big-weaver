@@ -25,7 +25,7 @@ export abstract class Repository<T, X> {
     return await (this.query(func) as Promise<X[]>)
   }
 
-  public async all (page: number = 1, take: number = 30): Promise<X[]> {
+  public async all (page = 1, take = 30): Promise<X[]> {
     const skip = (page - 1) * take
     return await this.many(async item => {
       // eslint-disable-next-line @typescript-eslint/return-await
@@ -43,7 +43,7 @@ export abstract class Repository<T, X> {
     })
   }
 
-  async findById (id: string | Number): Promise<X | null> {
+  async findById (id: string | number): Promise<X | null> {
     return await this.single(async item => {
       // eslint-disable-next-line @typescript-eslint/return-await
       return await (item as any).findUnique({

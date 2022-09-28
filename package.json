@@ -16,8 +16,8 @@
     "test:integration": "prisma migrate reset -f && npm run test:coverage",
     "test:watch": "prisma migrate reset -f && jest --watch",
     "test:coverage": "prisma migrate reset -f && jest --coverage",
-    "lint": "npx ts-standard | npx snazzy",
-    "lint:fix": "npx ts-standard --fix | npx snazzy",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
     "prepare": "npm run build",
     "size": "size-limit",
     "analyze": "size-limit --why",
@@ -64,6 +64,11 @@
     "next": "12.2.x"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "5.33.0",
+    "@typescript-eslint/parser": "5.33.0",
+    "eslint": "8.22.0",
+    "eslint-config-next": "12.3.1",
+    "eslint-config-standard-with-typescript": "23.0.0",
     "@size-limit/preset-small-lib": "7.0.5",
     "@tsconfig/node16": "1.0.2",
     "@types/bcryptjs": "2.4.2",
@@ -76,11 +81,11 @@
     "pino-pretty": "7.6.1",
     "prisma": "3.14.0",
     "size-limit": "7.0.5",
-    "snazzy": "^9.0.0",
+    "snazzy": "9.0.0",
     "ts-jest": "29.0.1",
-    "ts-standard": "^11.0.0",
-    "tsconfig-paths": "^4.1.0",
+    "ts-standard": "11.0.0",
+    "tsconfig-paths": "4.1.0",
     "tslib": "2.3.1",
-    "typescript": "^4.8.3"
+    "typescript": "4.8.3"
   }
 }

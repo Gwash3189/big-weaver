@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { Controller } from '../controller'
+import { AppController } from './app-controller'
 
-export class HealthController extends Controller {
+export class HealthController extends AppController {
   static checks (): [() => true] {
     return [() => true]
   }

@@ -58,7 +58,7 @@ export class Auth extends Facade {
     return verified
   }
 
-  private async createToken (jwtRecord: DecodedJwtToken): Promise<{token: string, verified: DecodedJwtToken}> {
+  private async createToken (jwtRecord: DecodedJwtToken): Promise<{ token: string, verified: DecodedJwtToken }> {
     const token = await Auth.createJwt({
       user: {
         id: jwtRecord.user.id
