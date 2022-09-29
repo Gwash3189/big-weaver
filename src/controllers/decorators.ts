@@ -1,7 +1,7 @@
 import { NetworkJar } from '../network-jar'
 import { Parameters } from '../request/parameters'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ZodTypeAny } from 'zod'
+import { z, ZodRawShape, ZodTypeAny } from 'zod'
 
 export function input (schema: ZodTypeAny) {
   return function inputDecorator (target: any, _propertyKey: string, descriptor: PropertyDescriptor) {
@@ -23,4 +23,12 @@ export function input (schema: ZodTypeAny) {
       value: func.bind(target)
     }
   }
+}
+
+export function query(item: ZodRawShape) {
+  return input(z.object({ query: z.object(item)}))
+}
+
+export function body(item: ZodRawShape) {
+  return input(z.object({ query: z.object(item)}))
 }
