@@ -25,10 +25,10 @@ export function input (schema: ZodTypeAny) {
   }
 }
 
-export function query(item: ZodRawShape) {
-  return input(z.object({ query: z.object(item)}))
+export function query (item: ZodRawShape) {
+  return input(z.object({ query: z.object(item) }))
 }
 
-export function body(item: ZodRawShape) {
-  return input(z.object({ query: z.object(item)}))
+export function body (item: ZodRawShape) {
+  return input(z.object({ query: z.object(item) }))
 }
