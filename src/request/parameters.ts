@@ -4,14 +4,14 @@ import { Facade } from '..'
 import { NetworkJar, RequestKey } from '../network-jar'
 
 export class Parameters extends Facade {
-  public query: Record<string, any>
-  public body: Record<string, any>
+  public _query: Record<string, any>
+  public _body: Record<string, any>
 
   constructor (request: NextApiRequest) {
     super()
 
-    this.query = request.query
-    this.body = request.body
+    this._query = request.query
+    this._body = request.body
   }
 
   static get () {
@@ -19,11 +19,18 @@ export class Parameters extends Facade {
     return new Parameters(request)
   }
 
-  // eslint-disable-next-line
+  query<T = Record<string, any>>() {
+    return this._query as T
+  }
+
+  body<T = Record<string, any>>() {
+    return this._body as T
+  }
+
   validate (options: z.ZodTypeAny) {
     return options.safeParse({
-      query: this.query,
-      body: this.body
+      query: this._query,
+      body: this._body
     })
   }
 }

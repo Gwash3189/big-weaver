@@ -15,8 +15,8 @@ describe(Parameters, () => {
     it('returns an instance of Parameters', () => {
       const params = Parameters.get()
 
-      expect(params).toHaveProperty('body', { argument: true })
-      expect(params).toHaveProperty('query', { argument: true })
+      expect(params.body()).toEqual({ argument: true })
+      expect(params.query()).toEqual({ argument: true })
     })
   })
 
@@ -71,4 +71,20 @@ describe(Parameters, () => {
       })
     })
   })
+
+  describe('#query', () => {
+    beforeEach(() => {
+      NetworkJar.set(RequestKey, ({
+        query: { page: 1 },
+        body: { name: 'Adam' },
+      } as unknown) as NextApiRequest)
+    })
+
+    it('returns the requests query parameters', () => {
+      expect(Parameters.get().query()).toEqual({
+        page: 1
+      })
+    })
+  })
+
 })

@@ -4,7 +4,10 @@ import { get, RequestBuilder, ResponseType } from '../../src/test'
 
 class RandoController extends AppController {
   get(_req: NextApiRequest, res: NextApiResponse<any>): void {
-    res.json(this.params)
+    res.json({
+      query: this.params.query(),
+      body: this.params.body(),
+    })
   }
 }
 
