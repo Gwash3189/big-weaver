@@ -28,9 +28,9 @@ export function input<Rte extends ZodRawShape> (schema: ZodObject<Rte, 'strip', 
 }
 
 export function query<Rte extends ZodRawShape> (item: ZodObject<Rte, 'strip', any>) {
-  return input(item, (params) => params.query)
+  return input(item, (params) => params.query())
 }
 
 export function body<Rte extends ZodRawShape> (item: ZodObject<Rte, 'strip', any>) {
-  return input(item, (params) => params.body)
+  return input(item, (params) => params.body())
 }
