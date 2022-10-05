@@ -1,5 +1,4 @@
 import { NextApiRequest } from 'next'
-import { z } from 'zod'
 import { Facade } from '..'
 import { NetworkJar, RequestKey } from '../network-jar'
 
@@ -25,12 +24,5 @@ export class Parameters extends Facade {
 
   body<T = Record<string, any>>() {
     return this._body as T
-  }
-
-  validate (options: z.ZodTypeAny) {
-    return options.safeParse({
-      query: this._query,
-      body: this._body
-    })
   }
 }

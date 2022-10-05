@@ -1,14 +1,16 @@
 import { NetworkJar } from '../network-jar'
-import { Parameters } from '../request/parameters'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { z, ZodRawShape, ZodTypeAny } from 'zod'
+import { z, ZodObject, ZodRawShape } from 'zod'
+import { AppController } from './app-controller'
+import { Parameters } from 'src/request/parameters'
 
-export function input (schema: ZodTypeAny) {
-  return function inputDecorator (target: any, _propertyKey: string, descriptor: PropertyDescriptor) {
+export function input<Rte extends ZodRawShape> (schema: ZodObject<Rte, 'strip', any>, accessor: (params: Parameters) => unknown) {
+  return function inputDecorator (target: AppController, _propertyKey: string, descriptor: PropertyDescriptor) {
     const original = descriptor.value
 
     const func = async function (request: NextApiRequest, response: NextApiResponse): Promise<void> {
-      const result = (target.params as Parameters).validate(schema)
+      const result = schema.safeParse(accessor(target.params))
+
       if (result.success) {
         return original.call(target, request, response)
       } else {
@@ -25,10 +27,10 @@ export function input (schema: ZodTypeAny) {
   }
 }
 
-export function query (item: ZodRawShape) {
-  return input(z.object({ query: z.object(item) }))
+export function query<Rte extends ZodRawShape>(item: ZodObject<Rte, 'strip', any>) {
+  return input(item, (params) => params.query)
 }
 
-export function body (item: ZodRawShape) {
-  return input(z.object({ query: z.object(item) }))
+export function body<Rte extends ZodRawShape>(item: ZodObject<Rte, 'strip', any>) {
+  return input(item, (params) => params.body)
 }
