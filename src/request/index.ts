@@ -22,3 +22,17 @@ export function data<Input> (input: Input): { data: Input } {
     data: input
   }
 }
+
+export function error<Input> (input: Input): { errors: Input } | { error: Input } {
+  return Array.isArray(input)
+    ? {
+        errors: input
+      }
+    : {
+        error: input
+      }
+}
+
+export function errors (input: any[]) {
+  return error(input)
+}
