@@ -16,3 +16,9 @@ export function getPageFromQuery (request: NextApiRequest): number {
 
   return page
 }
+
+export function data<Input> (input: Input): { data: Input } {
+  return {
+    data: input
+  }
+}
