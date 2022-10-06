@@ -3,6 +3,7 @@ import * as Helpers from '../src'
 describe('Helpers', () => {
   it('works', () => {
     expect(Helpers).toEqual({
+      errors: expect.any(Function),
       data: expect.any(Function),
       Auth: expect.any(Function),
       BaseRepository: expect.any(Function),

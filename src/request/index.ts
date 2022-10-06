@@ -22,3 +22,9 @@ export function data<Input> (input: Input): { data: Input } {
     data: input
   }
 }
+
+export function error<Input> (input: Input): { errors: Input } {
+  return {
+    errors: input
+  }
+}
