@@ -10,19 +10,19 @@ export class AppController extends Controller {
     return Parameters.get()
   }
 
-  protected ensure(item: RequestValidationInput) {
+  protected ensure (item: RequestValidationInput) {
     const middleware: Middleware = (request, _response, stop) => {
       try {
         if (item.query !== undefined) {
           const results = item.query?.safeParse(request.query)
-          if (results.success === false) {
+          if (!results.success) {
             stop()
             throw new FourTwoTwo(results)
           }
         }
         if (item.body !== undefined) {
           const results = item.body?.safeParse(request.query)
-          if (results.success === false) {
+          if (!results.success) {
             stop()
             throw new FourTwoTwo(results)
           }
@@ -37,7 +37,6 @@ export class AppController extends Controller {
           })
         }
       }
-
     }
 
     return middleware
