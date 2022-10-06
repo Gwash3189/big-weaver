@@ -4,7 +4,7 @@ import { AppController } from './app-controller'
 import { Parameters } from '../request/parameters'
 import { Zodish } from './types'
 
-export function input (schema: Zodish, accessor: (params: Parameters) => unknown) {
+export function input<Input> (schema: Zodish<Input>, accessor: (params: Parameters) => unknown) {
   return function inputDecorator (target: AppController, _propertyKey: string, descriptor: PropertyDescriptor) {
     const original = descriptor.value
 
@@ -15,7 +15,7 @@ export function input (schema: Zodish, accessor: (params: Parameters) => unknown
         return original.call(target, request, response)
       } else {
         NetworkJar.response().status(422).json({
-          errors: result.error.flatten()
+          errors: result.error?.flatten()
         })
       }
     }
@@ -27,10 +27,10 @@ export function input (schema: Zodish, accessor: (params: Parameters) => unknown
   }
 }
 
-export function query (item: Zodish) {
+export function query<Input> (item: Zodish<Input>) {
   return input(item, (params) => params.query())
 }
 
-export function body (item: Zodish) {
+export function body<Input> (item: Zodish<Input>) {
   return input(item, (params) => params.body())
 }

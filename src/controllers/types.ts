@@ -1,14 +1,14 @@
-export interface ZodishSafeParseResult<Rslt extends boolean, Input extends any> {
+export interface ZodishSafeParseResult<Rslt extends boolean, Input> {
   success: Rslt
   error?: Rslt extends false ? {
-      flatten: () => Record<string, any>
+    flatten: () => Record<string, any>
   } : never
   data?: Rslt extends true ? Input : never
 }
-export interface Zodish<Input extends any> {
+export interface Zodish<Input> {
   safeParse: (args: any) => ZodishSafeParseResult<boolean, Input>
 }
-export interface RequestValidationInput<Input extends any> {
+export interface RequestValidationInput<Input> {
   query?: Zodish<Input>
   body?: Zodish<Input>
 }

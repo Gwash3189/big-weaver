@@ -10,7 +10,7 @@ export class AppController extends Controller {
     return Parameters.get()
   }
 
-  protected ensure (item: RequestValidationInput) {
+  protected ensure<Input> (item: RequestValidationInput<Input>) {
     const middleware: Middleware = (request, _response, stop) => {
       try {
         if (item.query !== undefined) {
