@@ -14,9 +14,6 @@ export class Session extends Facade {
 
     cookies.set(name, JSON.stringify(value), {
       path: '/',
-      expires: dayjs(Date.now())
-        .add(7, 'days')
-        .toDate(),
       ...options
     })
   }

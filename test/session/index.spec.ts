@@ -24,7 +24,6 @@ describe('Session', () => {
 
     it('sets the required cookie', () => {
       expect(setMock).toHaveBeenCalledWith('name', JSON.stringify({ json: true }), {
-        expires: expect.any(Date),
         path: '/',
       })
     })
@@ -45,7 +44,6 @@ describe('Session', () => {
 
       it('sets the required cookie', () => {
         expect(setMock).toHaveBeenCalledWith('name', JSON.stringify({ json: true }), {
-          expires: expect.any(Date),
           path: '/another/path',
         })
       })
