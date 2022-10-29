@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { RequestKey, ResponseKey, NetworkJar } from '../network-jar'
 import { Controller } from '../controller/controller'
-import { ControllerJar } from '../controller/jar'
+import { ControllerJar } from './controller-jar'
 import { MiddlewareExecutor } from '../controller/middleware'
 import { Logger } from '../logger'
 import { constructor } from '../types'

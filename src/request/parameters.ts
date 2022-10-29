@@ -1,6 +1,6 @@
 import { NextApiRequest } from 'next'
 import { Facade } from '..'
-import { NetworkJar, RequestKey } from '../network-jar'
+import { NetworkJar } from '../network-jar'
 
 export class Parameters extends Facade {
   public _query: Record<string, any>
@@ -14,8 +14,7 @@ export class Parameters extends Facade {
   }
 
   static get () {
-    const request = NetworkJar.get<NextApiRequest>(RequestKey)
-    return new Parameters(request)
+    return new Parameters(NetworkJar.request())
   }
 
   query<T = Record<string, any>>() {

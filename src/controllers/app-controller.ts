@@ -4,6 +4,7 @@ import { Controller } from '../controller/controller'
 import { Parameters } from '../request/parameters'
 import { FourTwoTwo } from './exeptions'
 import { RequestValidationInput } from './types'
+import { error } from '../request'
 
 export class AppController extends Controller {
   get params (): Parameters {
@@ -11,7 +12,7 @@ export class AppController extends Controller {
   }
 
   protected ensure<Input> (item: RequestValidationInput<Input>) {
-    const middleware: Middleware = (request, _response, stop) => {
+    const middleware: Middleware = (request, response, stop) => {
       try {
         if (item.query !== undefined) {
           const results = item.query?.safeParse(request.query)
@@ -27,14 +28,15 @@ export class AppController extends Controller {
             throw new FourTwoTwo(results)
           }
         }
-      } catch (error) {
-        if (error instanceof FourTwoTwo) {
+      } catch (err) {
+        if (err instanceof FourTwoTwo) {
           Logger.error({
-            message: error.message
+            message: err.message
           })
           Logger.error({
-            message: JSON.stringify(error.value)
+            message: JSON.stringify(err.value)
           })
+          response.status(422).json(error(err))
         }
       }
     }

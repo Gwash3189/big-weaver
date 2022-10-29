@@ -1,16 +1,16 @@
 import { Facade } from '../facade'
 import Cookies from 'cookies'
-import { NetworkJar, RequestKey, ResponseKey } from '../network-jar'
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NetworkJar } from '../network-jar'
 import dayjs from 'dayjs'
 
 export type SessionValue = Record<string, any> | Array<Record<string, any>> | string
 
 export class Session extends Facade {
   static set (name: string, value: SessionValue | string, options: Cookies.SetOption = {}): void {
-    const request = NetworkJar.get<NextApiRequest>(RequestKey)
-    const response = NetworkJar.get<NextApiResponse>(ResponseKey)
-    const cookies = new Cookies(request, response)
+    const cookies = new Cookies(
+      NetworkJar.request(),
+      NetworkJar.response()
+    )
 
     cookies.set(name, JSON.stringify(value), {
       path: '/',
@@ -19,9 +19,11 @@ export class Session extends Facade {
   }
 
   static get<T> (name: string, defaultValue: T): T {
-    const request = NetworkJar.get<NextApiRequest>(RequestKey)
-    const response = NetworkJar.get<NextApiResponse>(ResponseKey)
-    const cookies = new Cookies(request, response)
+    const cookies = new Cookies(
+      NetworkJar.request(),
+      NetworkJar.response()
+    )
+
     try {
       return JSON.parse(cookies.get(name) ?? '') as T
     } catch {
@@ -30,10 +32,11 @@ export class Session extends Facade {
   }
 
   static clear (name: string): void {
-    const request = NetworkJar.get<NextApiRequest>(RequestKey)
-    const response = NetworkJar.get<NextApiResponse>(ResponseKey)
+    const cookies = new Cookies(
+      NetworkJar.request(),
+      NetworkJar.response()
+    )
 
-    const cookies = new Cookies(request, response)
     cookies.set(name, '', {
       path: '/',
       expires: dayjs(Date.now())
