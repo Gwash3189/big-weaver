@@ -102,7 +102,7 @@ export class Fetch<U = unknown> {
     return this.path(data)
   }
 
-  async get(pathInput: unknown, options: RequestInit = {}) {
+  async get (pathInput: unknown, options: RequestInit = {}) {
     const pathResult = await this.validatePath({
       path: pathInput
     })
@@ -112,10 +112,10 @@ export class Fetch<U = unknown> {
       method: 'GET'
     })
 
-    return (await this.validateResponse({ response })).response as Promise<U>
+    return await ((await this.validateResponse({ response })).response as Promise<U>)
   }
 
-  async post(pathInput: unknown, options: RequestInit = {}): Promise<U> {
+  async post (pathInput: unknown, options: RequestInit = {}): Promise<U> {
     const pathResult = await this.validatePath({
       path: pathInput
     })
@@ -128,10 +128,10 @@ export class Fetch<U = unknown> {
       method: 'POST'
     })
 
-    return (await this.validateResponse({ response })).response as Promise<U>
+    return await ((await this.validateResponse({ response })).response as Promise<U>)
   }
 
-  async put(pathInput: unknown, options: RequestInit = {}): Promise<U> {
+  async put (pathInput: unknown, options: RequestInit = {}): Promise<U> {
     const pathResult = await this.validatePath({
       path: pathInput
     })
@@ -144,10 +144,10 @@ export class Fetch<U = unknown> {
       method: 'PUT'
     })
 
-    return (await this.validateResponse({ response })).response as Promise<U>
+    return await ((await this.validateResponse({ response })).response as Promise<U>)
   }
 
-  async delete(pathInput: unknown, options: RequestInit = {}): Promise<U> {
+  async delete (pathInput: unknown, options: RequestInit = {}): Promise<U> {
     const pathResult = await this.validatePath({
       path: pathInput
     })
@@ -160,6 +160,6 @@ export class Fetch<U = unknown> {
       method: 'DELETE'
     })
 
-    return (await this.validateResponse({ response })).response as Promise<U>
+    return await ((await this.validateResponse({ response })).response as Promise<U>)
   }
 }
