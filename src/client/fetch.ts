@@ -1,4 +1,4 @@
-interface ZodishValidator<T = unknown> { parse: (data: unknown, params?: unknown) => T }
+interface ZodishValidator<T = unknown> { parse: (data: unknown, params?: any) => T }
 interface FetchInput<T> {
   path?: ZodishValidator
   body?: ZodishValidator
