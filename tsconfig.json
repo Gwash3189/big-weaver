@@ -4,7 +4,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "experimentalDecorators": true,
-    "lib": ["esnext"],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "importHelpers": true,
     "declaration": true,
     "sourceMap": true,
