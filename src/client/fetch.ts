@@ -1,8 +1,8 @@
-interface ZodishValidator { parse: (data: unknown, params?: unknown) => any }
-interface FetchInput {
+interface ZodishValidator<T = unknown> { parse: (data: unknown, params?: unknown) => T }
+interface FetchInput<T> {
   path?: ZodishValidator
   body?: ZodishValidator
-  response?: ZodishValidator
+  response?: ZodishValidator<T>
 }
 interface IncomingInput {
   path?: unknown
@@ -10,17 +10,17 @@ interface IncomingInput {
   response?: unknown
 }
 
-export class Fetch<T> {
-  private readonly input: FetchInput
+export class Fetch<U = unknown> {
+  private readonly input: FetchInput<U>
   private readonly path: (...any: any[]) => string
 
-  constructor (path: (...any: any[]) => string, input: FetchInput) {
+  constructor (path: (...any: any[]) => string, input: FetchInput<U>) {
     this.input = input
     this.path = path
   }
 
-  static input ({ path, validation = {} }: { path: (...any: any[]) => string, validation?: FetchInput }) {
-    return new Fetch(path, validation)
+  static input <U = unknown>({ path, validation = {} }: { path: (...any: any[]) => string, validation?: FetchInput<U> }) {
+    return new Fetch<U>(path, validation)
   }
 
   private headers (headers: Record<string, string> = {}) {
@@ -102,7 +102,7 @@ export class Fetch<T> {
     return this.path(data)
   }
 
-  async get<U>(pathInput: unknown, options: RequestInit = {}) {
+  async get(pathInput: unknown, options: RequestInit = {}) {
     const pathResult = await this.validatePath({
       path: pathInput
     })
@@ -110,12 +110,12 @@ export class Fetch<T> {
     const response = await this.fetch(this.path(pathResult.path), {
       ...options,
       method: 'GET'
-    }) as Promise<U>
+    })
 
-    return (await this.validateResponse({ response })).response
+    return (await this.validateResponse({ response })).response as Promise<U>
   }
 
-  async post<U>(pathInput: T, options: RequestInit = {}) {
+  async post(pathInput: unknown, options: RequestInit = {}): Promise<U> {
     const pathResult = await this.validatePath({
       path: pathInput
     })
@@ -126,12 +126,12 @@ export class Fetch<T> {
     const response = await this.fetch(this.path(pathResult.path), {
       ...options,
       method: 'POST'
-    }) as Promise<U>
+    })
 
-    return (await this.validateResponse({ response })).response
+    return (await this.validateResponse({ response })).response as Promise<U>
   }
 
-  async put<U>(pathInput: T, options: RequestInit = {}) {
+  async put(pathInput: unknown, options: RequestInit = {}): Promise<U> {
     const pathResult = await this.validatePath({
       path: pathInput
     })
@@ -142,12 +142,12 @@ export class Fetch<T> {
     const response = await this.fetch(this.path(pathResult.path), {
       ...options,
       method: 'PUT'
-    }) as Promise<U>
+    })
 
-    return (await this.validateResponse({ response })).response
+    return (await this.validateResponse({ response })).response as Promise<U>
   }
 
-  async delete<U>(pathInput: T, options: RequestInit = {}) {
+  async delete(pathInput: unknown, options: RequestInit = {}): Promise<U> {
     const pathResult = await this.validatePath({
       path: pathInput
     })
@@ -158,8 +158,8 @@ export class Fetch<T> {
     const response = await this.fetch(this.path(pathResult.path), {
       ...options,
       method: 'DELETE'
-    }) as Promise<U>
+    })
 
-    return (await this.validateResponse({ response })).response
+    return (await this.validateResponse({ response })).response as Promise<U>
   }
 }
