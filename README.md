@@ -1,5 +1,19 @@
 # nextjs-backend-helpers
 
+## Installation
+
+```bash
+yarn add nextjs-backend-helpers
+```
+
+or
+
+```bash
+npm i nextjs-backend-helpers
+```
+
+## Description
+
 A collection of helpers designed to make fullstack NextJS services easier to create. There are helpers to register API style `controllers`, a database `Repository` class designed to work with [`Prisma`](https://www.prisma.io/), and even testing tools.
 
 ## The Problem
