@@ -65,23 +65,23 @@ export class Controller extends Facade {
     }
   }
 
-  get(_request: NextApiRequest, response: NextApiResponse): void {
+  get (_request: NextApiRequest, response: NextApiResponse): void {
     this.notFound(response)
   }
 
-  post(_request: NextApiRequest, response: NextApiResponse): void {
+  post (_request: NextApiRequest, response: NextApiResponse): void {
     this.notFound(response)
   }
 
-  delete(_request: NextApiRequest, response: NextApiResponse): void {
+  delete (_request: NextApiRequest, response: NextApiResponse): void {
     this.notFound(response)
   }
 
-  patch(_request: NextApiRequest, response: NextApiResponse): void {
+  patch (_request: NextApiRequest, response: NextApiResponse): void {
     this.notFound(response)
   }
 
-  put(_request: NextApiRequest, response: NextApiResponse): void {
+  put (_request: NextApiRequest, response: NextApiResponse): void {
     this.notFound(response)
   }
 
