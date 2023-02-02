@@ -3,14 +3,14 @@ import { Facade } from './facade'
 import { NetworkJar } from './network-jar'
 
 export class Cookie extends Facade {
-  get<T>(name: string, defaultValue: T): T {
+  static get<T>(name: string, defaultValue: T): T {
     const request = NetworkJar.request()
     const response = NetworkJar.response()
 
     return new Cookies(request, response).get(name) as T ?? defaultValue
   }
 
-  set (name: string, value: any, options: Cookies.SetOption = {}): void {
+  static set (name: string, value: any, options: Cookies.SetOption = {}): void {
     const request = NetworkJar.request()
     const response = NetworkJar.response()
 
