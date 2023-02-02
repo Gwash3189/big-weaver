@@ -65,32 +65,32 @@ export class Controller extends Facade {
     }
   }
 
-  get (_req: NextApiRequest, res: NextApiResponse): void {
-    this.notFound(res)
+  get<TResponse = any>(_request: NextApiRequest, response: NextApiResponse<TResponse>): void {
+    this.notFound(response)
   }
 
-  post (_req: NextApiRequest, res: NextApiResponse): void {
-    this.notFound(res)
+  post<TResponse = any>(_request: NextApiRequest, response: NextApiResponse<TResponse>): void {
+    this.notFound(response)
   }
 
-  delete (_req: NextApiRequest, res: NextApiResponse): void {
-    this.notFound(res)
+  delete<TResponse = any>(_request: NextApiRequest, response: NextApiResponse<TResponse>): void {
+    this.notFound(response)
   }
 
-  patch (_req: NextApiRequest, res: NextApiResponse): void {
-    this.notFound(res)
+  patch<TResponse = any>(_request: NextApiRequest, response: NextApiResponse<TResponse>): void {
+    this.notFound(response)
   }
 
-  put (_req: NextApiRequest, res: NextApiResponse): void {
-    this.notFound(res)
+  put<TResponse = any>(_request: NextApiRequest, response: NextApiResponse<TResponse>): void {
+    this.notFound(response)
   }
 
-  head (_req: NextApiRequest, res: NextApiResponse): void {
-    this.notFound(res)
+  head<TResponse = any>(_request: NextApiRequest, response: NextApiResponse<TResponse>): void {
+    this.notFound(response)
   }
 
-  options (_req: NextApiRequest, res: NextApiResponse): void {
-    this.notFound(res)
+  options<TResponse = any>(_request: NextApiRequest, response: NextApiResponse<TResponse>): void {
+    this.notFound(response)
   }
 
   private notFound (res: NextApiResponse): NextApiResponse<any> {
