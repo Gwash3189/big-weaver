@@ -23,14 +23,16 @@ export function data<Input> (input: Input): { data: Input } {
   }
 }
 
-export function error<Input> (input: Input): { errors: Input } | { error: Input } {
-  return Array.isArray(input)
+type ErrorOutput<T> = ({error: string} | {errors: string[]} & T
+
+export function error<Input, Output> (input: Input): Output {
+  return (Array.isArray(input)
     ? {
         errors: input
       }
     : {
         error: input
-      }
+      }) as ErrorOutput<Output>
 }
 
 export function errors (input: any[]) {
