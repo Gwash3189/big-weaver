@@ -36,7 +36,7 @@ export class AppController extends Controller {
           Logger.error({
             message: JSON.stringify(err.value)
           })
-          response.status(422).json(error(err))
+          response.status(422).json(error(err.message))
         }
       }
     }
