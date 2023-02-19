@@ -65,31 +65,31 @@ export class Controller extends Facade {
     }
   }
 
-  get (_request: NextApiRequest, response: NextApiResponse): void {
+  async get (_request: NextApiRequest, response: NextApiResponse): Promise<void> {
     this.notFound(response)
   }
 
-  post (_request: NextApiRequest, response: NextApiResponse): void {
+  async post (_request: NextApiRequest, response: NextApiResponse): Promise<void> {
     this.notFound(response)
   }
 
-  delete (_request: NextApiRequest, response: NextApiResponse): void {
+  async delete (_request: NextApiRequest, response: NextApiResponse): Promise<void> {
     this.notFound(response)
   }
 
-  patch (_request: NextApiRequest, response: NextApiResponse): void {
+  async patch (_request: NextApiRequest, response: NextApiResponse): Promise<void> {
     this.notFound(response)
   }
 
-  put (_request: NextApiRequest, response: NextApiResponse): void {
+  async put (_request: NextApiRequest, response: NextApiResponse): Promise<void> {
     this.notFound(response)
   }
 
-  head<TResponse = any>(_request: NextApiRequest, response: NextApiResponse<TResponse>): void {
+  async head<TResponse = any>(_request: NextApiRequest, response: NextApiResponse<TResponse>): Promise<void> {
     this.notFound(response)
   }
 
-  options<TResponse = any>(_request: NextApiRequest, response: NextApiResponse<TResponse>): void {
+  async options<TResponse = any>(_request: NextApiRequest, response: NextApiResponse<TResponse>): Promise<void> {
     this.notFound(response)
   }
 
