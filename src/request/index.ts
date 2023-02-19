@@ -23,7 +23,7 @@ export function data<Input> (input: Input): { data: Input } {
   }
 }
 
-export function error(input: string[] | string) {
+export function error (input: string[] | string) {
   if (Array.isArray(input)) {
     return {
       errors: input
