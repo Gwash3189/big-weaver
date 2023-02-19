@@ -22,7 +22,7 @@ export class AppController extends Controller {
           }
         }
         if (item.body !== undefined) {
-          const results = item.body?.safeParse(request.query)
+          const results = item.body?.safeParse(request.body)
           if (!results.success) {
             stop()
             throw new FourTwoTwo(results)
