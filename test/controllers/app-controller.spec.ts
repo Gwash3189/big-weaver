@@ -3,7 +3,7 @@ import { AppController } from '../../src/controllers/app-controller'
 import { get, RequestBuilder, ResponseType } from '../../src/test'
 
 class RandoController extends AppController {
-  get(_req: NextApiRequest, res: NextApiResponse<any>): void {
+  async get(_req: NextApiRequest, res: NextApiResponse<any>) {
     res.json({
       query: this.params.query(),
       body: this.params.body(),

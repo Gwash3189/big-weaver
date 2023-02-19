@@ -45,15 +45,15 @@ describe('Controller', () => {
         })
       }
 
-      get() {
+      async get() {
         throw new CustomError()
       }
 
-      post() {
+      async post() {
         throw new Error()
       }
 
-      put() {
+      async put() {
         throw new AnotherError()
       }
     }

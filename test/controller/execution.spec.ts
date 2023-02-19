@@ -5,31 +5,31 @@ import { Logger } from '../../src/logger'
 let controllerSpy: jest.Mock
 
 class TestController extends Controller {
-  get(req: NextApiRequest, res: NextApiResponse) {
+  async get(req: NextApiRequest, res: NextApiResponse) {
     controllerSpy(req, res)
   }
 
-  put(req: NextApiRequest, res: NextApiResponse) {
+  async put(req: NextApiRequest, res: NextApiResponse) {
     controllerSpy(req, res)
   }
 
-  post(req: NextApiRequest, res: NextApiResponse) {
+  async post(req: NextApiRequest, res: NextApiResponse) {
     controllerSpy(req, res)
   }
 
-  delete(req: NextApiRequest, res: NextApiResponse) {
+  async delete(req: NextApiRequest, res: NextApiResponse) {
     controllerSpy(req, res)
   }
 
-  patch(req: NextApiRequest, res: NextApiResponse) {
+  async patch(req: NextApiRequest, res: NextApiResponse) {
     controllerSpy(req, res)
   }
 
-  head(req: NextApiRequest, res: NextApiResponse) {
+  async head(req: NextApiRequest, res: NextApiResponse) {
     controllerSpy(req, res)
   }
 
-  options(req: NextApiRequest, res: NextApiResponse) {
+  async options(req: NextApiRequest, res: NextApiResponse) {
     controllerSpy(req, res)
   }
 }
