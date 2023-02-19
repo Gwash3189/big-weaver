@@ -41,7 +41,7 @@ export class Controller extends Facade {
   async handle (method: SupportedRequestMethods, request: NextApiRequest, response: NextApiResponse): Promise<any> {
     try {
       if (this[method] !== undefined) {
-        return this[method](request, response)
+        return await this[method](request, response)
       }
 
       Logger.warn({ message: `${this.constructor.name} does not support ${method}` })
