@@ -231,7 +231,7 @@ describe('Controller', () => {
     })
   })
 
-  describe('#getMiddleware', () => {
+  describe('#hasMiddlewareInstalled', () => {
     function middlewareFunciton() {}
 
     class AfterController extends Controller {
