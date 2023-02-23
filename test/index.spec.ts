@@ -22,6 +22,8 @@ describe('Helpers', () => {
       patch: expect.any(Function),
       post: expect.any(Function),
       put: expect.any(Function),
+      hasMiddlewareInstalled: expect.any(Function),
+      willRescueFrom: expect.any(Function)
     })
   })
 })

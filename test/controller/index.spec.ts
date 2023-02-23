@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Controller } from '../../src/controller'
-import { RequestBuilder, ResponseBuilder } from '../../src/test'
+import { hasMiddlewareInstalled, RequestBuilder, ResponseBuilder, willRescueFrom } from '../../src/test'
 import { MiddlewareProvider } from '../../src/controller/middleware'
 
 describe('Controller', () => {
@@ -227,6 +227,65 @@ describe('Controller', () => {
     describe('#except', () => {
       it('tracks which method to not apply the middleware to', () => {
         expect(((instance as any).afterMiddleware[0] as any)._except).toEqual(['post'])
+      })
+    })
+  })
+
+  describe('#getMiddleware', () => {
+    function middlewareFunciton() {}
+
+    class AfterController extends Controller {
+      constructor() {
+        super()
+
+        this.after(middlewareFunciton)
+          .only('get')
+          .except('post')
+      }
+    }
+
+    it('gets the installed middleware', () => {
+      expect(hasMiddlewareInstalled(new AfterController(), middlewareFunciton)).toEqual(true)
+    })
+  })
+
+  describe('#willRescueFrom', () => {
+    function errorHandler() {}
+
+    class AfterController extends Controller {
+      constructor() {
+        super()
+
+        this.rescue(Error, errorHandler)
+      }
+    }
+
+    describe('when only the error is given', () => {
+      describe('when the error matches', () => {
+        it('returns true', () => {
+          expect(willRescueFrom(new AfterController(), Error)).toEqual(true)
+        })
+      })
+
+      describe('when the error does not matche', () => {
+        class RandoError {}
+        it('returns false', () => {
+          expect(willRescueFrom(new AfterController(), RandoError, jest.fn())).toEqual(false)
+        })
+      })
+    })
+
+    describe('when the error and handler is given', () => {
+      describe('when the handler matches', () => {
+        it('returns true', () => {
+          expect(willRescueFrom(new AfterController(), Error, errorHandler)).toEqual(true)
+        })
+      })
+
+      describe('when the handler does not matche', () => {
+        it('returns false', () => {
+          expect(willRescueFrom(new AfterController(), Error, jest.fn())).toEqual(false)
+        })
       })
     })
   })

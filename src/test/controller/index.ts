@@ -1,4 +1,7 @@
-import { NextApiResponse } from 'next'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { AfterMiddleware, BeforeMiddleware } from 'src/controller/middleware'
+import { Middleware } from 'src/controller/types'
+import { constructor } from 'src/types'
 import { Controller, install } from '../../controller'
 import { SupportedRequestMethods } from '../../controller/execution'
 import { Facade } from '../../facade'
@@ -142,6 +145,39 @@ async function requestMaker (method: SupportedRequestMethods, controller: typeof
   req.method(method)
   await handler((req.build()), (res as unknown) as NextApiResponse)
   return await res.build()
+}
+
+function getMiddleware (controller: Controller) {
+  const afterMiddleware = ((controller as unknown) as { afterMiddleware: AfterMiddleware[] }).afterMiddleware
+  const beforeMiddleware = ((controller as unknown) as { beforeMiddleware: BeforeMiddleware[] }).beforeMiddleware
+
+  return {
+    beforeMiddleware,
+    afterMiddleware
+  }
+}
+
+export function hasMiddlewareInstalled (controller: Controller, middleware: Middleware) {
+  const wares = getMiddleware(controller)
+  const beforeMiddleware = wares.beforeMiddleware.findIndex((beforeMiddleware) => {
+    return beforeMiddleware.handle === middleware
+  })
+  const afterMiddleware = wares.afterMiddleware.findIndex((afterMiddleware) => {
+    return afterMiddleware.handle === middleware
+  })
+
+  return beforeMiddleware >= 0 || afterMiddleware >= 0
+}
+
+export function willRescueFrom<E> (controller: Controller, error: constructor<E>, handler?: (error: any, request: NextApiRequest, response: NextApiResponse) => Promise<any>) {
+  const rescueMap = ((controller as unknown) as { rescueMap: Record<string, (error: any, request: NextApiRequest, response: NextApiResponse) => Promise<any>> }).rescueMap
+  const willRescueFromError = rescueMap[error.name]
+
+  if (handler !== undefined) {
+    return willRescueFromError === handler
+  } else {
+    return Boolean(willRescueFromError)
+  }
 }
 
 export const get = async (controller: typeof Controller, req: RequestBuilder = new RequestBuilder()): Promise<ResponseType> => {

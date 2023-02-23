@@ -121,6 +121,8 @@ describe('Middleware', () => {
 
 describe('MiddlewareExecutor', () => {
   describe('#before', () => {
+    let middleware: jest.Mock, req: NextApiRequest, res: NextApiResponse, mockController: TestController
+
     class TestController extends Controller {
       constructor() {
         super()
@@ -128,8 +130,6 @@ describe('MiddlewareExecutor', () => {
         this.before(middleware)
       }
     }
-
-    let middleware: jest.Mock, req: NextApiRequest, res: NextApiResponse, mockController: TestController
 
     beforeEach(() => {
       middleware = jest.fn()
@@ -168,7 +168,7 @@ describe('MiddlewareExecutor', () => {
           MiddlewareExecutor.before('get', mockController, req, res)
         })
 
-        it('executes the middles', () => {
+        it('executes the middleware', () => {
           expect(middleware).toHaveBeenCalledWith(req, res, expect.any(Function))
         })
       })
