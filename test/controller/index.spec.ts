@@ -278,7 +278,7 @@ describe('Controller', () => {
     describe('when the error and handler is given', () => {
       describe('when the handler matches', () => {
         it('returns true', () => {
-          expect(willRescueFrom(new AfterController(), Error, errorHandler)).toEqual(true)
+          expect(willRescueFrom(new AfterController(), Error, errorHandler as any)).toEqual(true)
         })
       })
 
