@@ -8,7 +8,7 @@ export interface ZodishSafeParseResult<Rslt extends boolean, Input> {
 export interface Zodish<Input> {
   safeParse: (args: any) => ZodishSafeParseResult<boolean, Input>
 }
-export interface RequestValidationInput<Input> {
-  query?: Zodish<Input>
-  body?: Zodish<Input>
+export interface RequestValidationInput<Query = {}, Body = {}> {
+  query?: Zodish<Query>
+  body?: Zodish<Body>
 }

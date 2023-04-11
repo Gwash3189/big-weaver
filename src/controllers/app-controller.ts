@@ -11,7 +11,7 @@ export class AppController extends Controller {
     return Parameters.get()
   }
 
-  protected ensure<Input> (item: RequestValidationInput<Input>) {
+  protected ensure<Query = {}, Body = {}> (item: RequestValidationInput<Query, Body>) {
     const middleware: Middleware = (request, response, stop) => {
       try {
         if (item.query !== undefined) {
