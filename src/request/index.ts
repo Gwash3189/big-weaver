@@ -23,7 +23,15 @@ export function data<Input> (input: Input): { data: Input } {
   }
 }
 
-export function error (input: string[] | string) {
+type ErrorReturn = {
+  errors: string[]
+  error?: undefined
+} | {
+  error: string
+  errors?: undefined
+}
+
+export function error (input: string[] | string): ErrorReturn {
   if (Array.isArray(input)) {
     return {
       errors: input
@@ -35,6 +43,6 @@ export function error (input: string[] | string) {
   }
 }
 
-export function errors (input: string[]) {
+export function errors (input: string[]): ErrorReturn {
   return error(input)
 }

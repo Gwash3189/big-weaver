@@ -13,15 +13,15 @@ export class Parameters extends Facade {
     this._body = request.body
   }
 
-  static get () {
+  static get (): Parameters {
     return new Parameters(NetworkJar.request())
   }
 
-  query<T = Record<string, any>>() {
+  query<T = Record<string, any>>(): T {
     return this._query as T
   }
 
-  body<T = Record<string, any>>() {
+  body<T = Record<string, any>>(): T {
     return this._body as T
   }
 }

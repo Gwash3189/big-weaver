@@ -19,18 +19,18 @@ export class Fetch<U = unknown> {
     this.path = path
   }
 
-  static input <U = unknown>({ path, validation = {} }: { path: (...any: any[]) => string, validation?: FetchInput<U> }) {
+  static input <U = unknown>({ path, validation = {} }: { path: (...any: any[]) => string, validation?: FetchInput<U> }): Fetch<U> {
     return new Fetch<U>(path, validation)
   }
 
-  private headers (headers: Record<string, string> = {}) {
+  private headers (headers: Record<string, string> = {}): Record<string, string> {
     return {
       'Content-type': 'application/json',
       ...headers
     }
   }
 
-  private async fetch (path: string, options: RequestInit = {}) {
+  private async fetch<T = any>(path: string, options: RequestInit = {}): Promise<T> {
     return await fetch(path, {
       ...options,
       headers: {
@@ -46,7 +46,7 @@ export class Fetch<U = unknown> {
     })
   }
 
-  private async validatePath ({ path }: IncomingInput) {
+  private async validatePath ({ path }: IncomingInput): Promise<{ path: unknown }> {
     let pathResult = path
 
     try {
@@ -64,7 +64,7 @@ export class Fetch<U = unknown> {
     return await Promise.resolve({ path: pathResult })
   }
 
-  private async validateBody ({ body }: IncomingInput) {
+  private async validateBody ({ body }: IncomingInput): Promise<void> {
     try {
       if (body !== undefined && (this.input.body != null)) {
         this.input.body?.parse(body)
@@ -80,7 +80,7 @@ export class Fetch<U = unknown> {
     return await Promise.resolve()
   }
 
-  private async validateResponse ({ response }: IncomingInput) {
+  private async validateResponse ({ response }: IncomingInput): Promise<{ response: unknown }> {
     let responseResult = response
 
     try {
@@ -98,11 +98,11 @@ export class Fetch<U = unknown> {
     return await Promise.resolve({ response: responseResult })
   }
 
-  key (data: unknown = {}) {
+  key (data: unknown = {}): string {
     return this.path(data)
   }
 
-  async get (pathInput: unknown, options: RequestInit = {}) {
+  async get (pathInput: unknown, options: RequestInit = {}): Promise<U> {
     const pathResult = await this.validatePath({
       path: pathInput
     })

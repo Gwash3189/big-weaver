@@ -147,7 +147,12 @@ async function requestMaker (method: SupportedRequestMethods, controller: typeof
   return await res.build()
 }
 
-function getMiddleware (controller: Controller) {
+interface GetMiddlewareReturnType {
+  beforeMiddleware: BeforeMiddleware[]
+  afterMiddleware: AfterMiddleware[]
+}
+
+function getMiddleware (controller: Controller): GetMiddlewareReturnType {
   const afterMiddleware = ((controller as unknown) as { afterMiddleware: AfterMiddleware[] }).afterMiddleware
   const beforeMiddleware = ((controller as unknown) as { beforeMiddleware: BeforeMiddleware[] }).beforeMiddleware
 
@@ -157,7 +162,7 @@ function getMiddleware (controller: Controller) {
   }
 }
 
-export function hasMiddlewareInstalled (controller: Controller, middleware: Middleware) {
+export function hasMiddlewareInstalled (controller: Controller, middleware: Middleware): boolean {
   const wares = getMiddleware(controller)
   const beforeMiddleware = wares.beforeMiddleware.findIndex((beforeMiddleware) => {
     return beforeMiddleware.handle === middleware
@@ -169,7 +174,7 @@ export function hasMiddlewareInstalled (controller: Controller, middleware: Midd
   return beforeMiddleware >= 0 || afterMiddleware >= 0
 }
 
-export function willRescueFrom<E> (controller: Controller, error: constructor<E>, handler?: (error: any, request: NextApiRequest, response: NextApiResponse) => Promise<any>) {
+export function willRescueFrom<E> (controller: Controller, error: constructor<E>, handler?: (error: any, request: NextApiRequest, response: NextApiResponse) => Promise<any>): boolean {
   const rescueMap = ((controller as unknown) as { rescueMap: Record<string, (error: any, request: NextApiRequest, response: NextApiResponse) => Promise<any>> }).rescueMap
   const willRescueFromError = rescueMap[error.name]
 
