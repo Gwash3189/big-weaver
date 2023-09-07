@@ -16,7 +16,7 @@ export default function handler(req, res) {
 }
 ```
 
-While this is fine for simple routes, it's easy to see how this doesn's scale.
+While this is fine for simple routes, it's easy to see how this doesn't scale.
 
 ## The Solution
 
@@ -50,6 +50,14 @@ export class AppController extends Controller {
         errors: [error.constructor.name, error.message],
       })
     })
+
+    // validate incoming post params against a ZOD type
+    this.before(this.ensure({
+      body: z.object({
+        name: z.string(),
+        age: z.string().optional()
+      })
+    })).only('post')
   }
 }
 
@@ -62,14 +70,19 @@ type UserBody = {
   birthday: date
 }
 
-type Response = {
+type GetResponse = {
   id: string,
   name: string
+}
+
+type PostResponse = {
+  success: true
 }
 
 export class UserController extends AppController {
   constructor() {
     super()
+
     this.before((req: NextApiRequest) => {
       console.log(Cookie.get('secret-cookie-value'))
     }).only('get')
@@ -79,7 +92,7 @@ export class UserController extends AppController {
     }).only('post')
   }
 
-  async get(request: NextApiRequest, response: NextApiResponse<Response>) {
+  async get(request: NextApiRequest, response: NextApiResponse<GetResponse>) {
     //...
     const {id} = getQuery<UserIdQuery>(request)
     const {name, birthday} = getBody<UserBody>(request)
@@ -92,8 +105,14 @@ export class UserController extends AppController {
       cookieValue
     })
   }
+
+  async post(request: NextApiRequest, response: NextApiResponse<PostResponse>) {
+    // request params have passed validation
+    response.json({ success: true })
+  }
 }
 ```
+
 #### We also have test helpers
 
 ```ts
