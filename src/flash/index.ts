@@ -1,14 +1,12 @@
 import Cookies from 'cookies'
 import dayjs from 'dayjs'
 import { Facade } from '../facade'
-import { FlashConstants } from '../flash/flash-constants'
+import { FlashConstants } from './flash-constants'
 import { Session, SessionValue } from '../session'
 
 export class Flash extends Facade {
   static clear (): void {
-    FlashConstants.names.forEach((name) => {
-      Session.clear(name)
-    })
+    FlashConstants.names.forEach((name) => Session.clear(name))
   }
 
   static success (message: SessionValue, options: Cookies.SetOption = {}): void {

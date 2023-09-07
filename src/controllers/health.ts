@@ -8,7 +8,7 @@ export class HealthController extends AppController {
     return [() => true]
   }
 
-  async get (_request: NextApiRequest, response: NextApiResponse<Response>) {
+  async get (_request: NextApiRequest, response: NextApiResponse<Response>): Promise<void> {
     const alive = HealthController
       .checks()
       .every(check => check())

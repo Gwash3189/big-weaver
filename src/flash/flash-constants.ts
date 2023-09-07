@@ -1,17 +1,17 @@
+const success = 'flash:success'
+const error = 'flash:error'
+const warning = 'flash:warning'
+const info = 'flash:info'
+
 export const FlashConstants = {
-  get success () {
-    return 'flash:success'
-  },
-  get error () {
-    return 'flash:error'
-  },
-  get warning () {
-    return 'flash:warning'
-  },
-  get info () {
-    return 'flash:info'
-  },
-  get names () {
-    return [FlashConstants.error, FlashConstants.info, FlashConstants.success, FlashConstants.warning]
-  }
+  success,
+  error,
+  warning,
+  info,
+  names: [
+    error,
+    info,
+    success,
+    warning
+  ]
 }

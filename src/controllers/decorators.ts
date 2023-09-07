@@ -4,8 +4,19 @@ import { AppController } from './app-controller'
 import { Parameters } from '../request/parameters'
 import { Zodish } from './types'
 
-export function input<Input> (schema: Zodish<Input>, accessor: (params: Parameters) => unknown) {
-  return function inputDecorator (target: AppController, _propertyKey: string, descriptor: PropertyDescriptor) {
+interface DecoratorReturn {
+  value: (request: NextApiRequest, response: NextApiResponse) => Promise<void>
+  configurable?: boolean | undefined
+  enumerable?: boolean | undefined
+  writable?: boolean | undefined
+  get?: () => any
+  set?: (v: any) => void
+}
+
+type Decorator = (target: AppController, _propertyKey: string, descriptor: PropertyDescriptor) => DecoratorReturn
+
+export function input<Input> (schema: Zodish<Input>, accessor: (params: Parameters) => unknown): Decorator {
+  return function inputDecorator (target: AppController, _propertyKey: string, descriptor: PropertyDescriptor): DecoratorReturn {
     const original = descriptor.value
 
     const func = async function (request: NextApiRequest, response: NextApiResponse): Promise<void> {
@@ -27,10 +38,10 @@ export function input<Input> (schema: Zodish<Input>, accessor: (params: Paramete
   }
 }
 
-export function query<Input> (item: Zodish<Input>) {
+export function query<Input> (item: Zodish<Input>): Decorator {
   return input(item, (params) => params.query())
 }
 
-export function body<Input> (item: Zodish<Input>) {
+export function body<Input> (item: Zodish<Input>): Decorator {
   return input(item, (params) => params.body())
 }
