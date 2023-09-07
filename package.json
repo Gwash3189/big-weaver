@@ -47,7 +47,7 @@
     }
   ],
   "dependencies": {
-    "@prisma/client": "3.7.0",
+    "@prisma/client": "3.13.0",
     "@types/cookie": "0.4.1",
     "@types/jsonwebtoken": "8.5.8",
     "bcryptjs": "2.4.3",
@@ -72,7 +72,7 @@
     "next": "13.x.x",
     "np": "7.6.0",
     "pino-pretty": "7.6.1",
-    "prisma": "3.14.0",
+    "prisma": "3.13.0",
     "size-limit": "7.0.5",
     "snazzy": "^9.0.0",
     "ts-jest": "29.0.1",
